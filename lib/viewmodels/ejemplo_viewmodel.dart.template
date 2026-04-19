@@ -1,0 +1,160 @@
+/// Template para crear un nuevo ViewModel reutilizable.
+///
+/// INSTRUCCIONES:
+/// 1. Copiar este archivo a lib/viewmodels/nuevo_viewmodel.dart
+/// 2. Reemplazar "Ejemplo" con el nombre de tu feature
+/// 3. Agregar propiedades y métodos específicos
+/// 4. Registrar en lib/service_locator.dart
+/// 5. Usar en pantallas via service_locator
+
+import 'package:flutter/foundation.dart';
+
+/// ViewModel para gestionar lógica de [Feature Ejemplo].
+///
+/// Encapsula toda la lógica de negocio, separada de la UI.
+/// Se notifica automáticamente a listeners cuando el estado cambia.
+///
+/// EJEMPLO DE USO:
+/// ```dart
+/// // En initState():
+/// late EjemploViewModel _vm;
+///
+/// @override
+/// void initState() {
+///   super.initState();
+///   _vm = ejemploViewModel;  // Del service locator
+///   _vm.addListener(_onVMChange);
+/// }
+///
+/// // En build():
+/// _vm.cargando
+///     ? const CircularProgressIndicator()
+///     : Text(_vm.resultado)
+///
+/// // Ejecutar acciones:
+/// IconButton(
+///   onPressed: _vm.hacerAlgo,
+///   icon: const Icon(Icons.done),
+/// )
+/// ```
+class EjemploViewModel extends ChangeNotifier {
+  // ============================================================
+  // PROPIEDADES PRIVADAS (nunca accesibles desde fuera)
+  // ============================================================
+
+  bool _cargando = false;
+  String _resultado = '';
+  List<String> _items = [];
+  String? _error;
+
+  // ============================================================
+  // GETTERS PÚBLICOS (readonly desde la UI)
+  // ============================================================
+
+  /// `true` si se está cargando datos.
+  ///
+  /// Usa en la UI para mostrar spinner:
+  /// ```dart
+  /// _vm.cargando ? CircularProgressIndicator() : MyContent()
+  /// ```
+  bool get cargando => _cargando;
+
+  /// Resultado del último cálculo/obtención de datos.
+  String get resultado => _resultado;
+
+  /// Lista de items cargados.
+  List<String> get items => List.unmodifiable(_items);
+
+  /// Error si hubo uno. `null` si todo está bien.
+  String? get error => _error;
+
+  // ============================================================
+  // MÉTODOS DE INICIALIZACIÓN
+  // ============================================================
+
+  /// Inicializar recursos si es necesario.
+  ///
+  /// Llamar una sola vez, típicamente en initState() del widget.
+  /// Idempotente: si ya está inicializado, no hace nada.
+  Future<void> initialize() async {
+    if (_items.isNotEmpty) return;
+
+    _cargando = true;
+    _error = null;
+    notifyListeners();
+
+    try {
+      // Simular carga de datos
+      await Future.delayed(const Duration(seconds: 1));
+      _items = ['Item 1', 'Item 2', 'Item 3'];
+      _resultado = 'Carga completada';
+    } catch (e) {
+      _error = 'Error al inicializar: $e';
+    } finally {
+      _cargando = false;
+      notifyListeners();
+    }
+  }
+
+  // ============================================================
+  // MÉTODOS DE NEGOCIO (Actions)
+  // ============================================================
+
+  /// Realizar una acción que toma tiempo.
+  ///
+  /// Ejemplo de patrón: mostrar spinner, hacer operación, ocultar spinner.
+  Future<void> hacerAlgo() async {
+    _cargando = true;
+    _error = null;
+    notifyListeners();
+
+    try {
+      // Simular operación
+      await Future.delayed(const Duration(seconds: 2));
+      _resultado = 'Acción completada';
+    } catch (e) {
+      _error = 'Error: $e';
+    } finally {
+      _cargando = false;
+      notifyListeners();
+    }
+  }
+
+  /// Agregar item a la lista.
+  void agregarItem(String item) {
+    _items.add(item);
+    notifyListeners();
+  }
+
+  /// Eliminar item por índice.
+  void eliminarItem(int index) {
+    if (index >= 0 && index < _items.length) {
+      _items.removeAt(index);
+      notifyListeners();
+    }
+  }
+
+  /// Limpiar estado.
+  void limpiar() {
+    _resultado = '';
+    _items.clear();
+    _error = null;
+    _cargando = false;
+    notifyListeners();
+  }
+
+  // ============================================================
+  // CLEANUP (Obligatorio)
+  // ============================================================
+
+  /// Limpiar recursos cuando el ViewModel se destruye.
+  ///
+  /// ⚠️ Para Singletons, esto se llama al cerrar la app.
+  /// Para instancias locales, llamar en dispose() del widget.
+  @override
+  void dispose() {
+    // Cerrar streams, timers, cancelar requests, etc.
+    _items.clear();
+    super.dispose();
+  }
+}

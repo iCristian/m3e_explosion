@@ -1,0 +1,178 @@
+/// Template para crear un nuevo Servicio reutilizable.
+///
+/// INSTRUCCIONES:
+/// 1. Copiar este archivo a lib/services/nuevo_servicio.dart
+/// 2. Reemplazar "Ejemplo" con el nombre del servicio
+/// 3. Implementar métodos específicos
+/// 4. Registrar en lib/service_locator.dart (en setupServiceLocator)
+/// 5. Acceder via service_locator: final svc = ejemploService;
+
+/// Servicio para [funcionalidad del servicio ejemplo].
+///
+/// Encapsula la lógica de un dominio específico, permitiendo
+/// acceso centralizado desde cualquier parte de la app.
+///
+/// PATRÓN:
+/// - Métodos asincrónicos para operaciones largas
+/// - Métodos sincronos para operaciones rápidas
+/// - Excepciones bien documentadas
+/// - Métodos initialize() para setup inicial
+///
+/// EJEMPLO DE USO:
+/// ```dart
+/// import 'service_locator.dart';
+///
+/// // En main():
+/// await setupServiceLocator();  // Registra EjemploService
+///
+/// // En cualquier parte del código:
+/// final servicio = ejemploService;  // Del service locator
+/// final resultado = await servicio.obtenerDatos();
+/// ```
+class EjemploService {
+  /// Marca si el servicio está inicializado.
+  bool _inicializado = false;
+
+  /// Datos en caché (ejemplo).
+  Map<String, dynamic> _cache = {};
+
+  // ============================================================
+  // GETTERS
+  // ============================================================
+
+  /// `true` si el servicio está listo para usar.
+  bool get inicializado => _inicializado;
+
+  /// Acceso a caché (use con cuidado).
+  Map<String, dynamic> get cache => Map.unmodifiable(_cache);
+
+  // ============================================================
+  // INICIALIZACIÓN
+  // ============================================================
+
+  /// Inicializar el servicio.
+  ///
+  /// Se debe llamar UNA SOLA VEZ en setupServiceLocator().
+  ///
+  /// Throws: [Exception] si hay error en inicialización.
+  Future<void> initialize() async {
+    if (_inicializado) return;
+
+    try {
+      // Hacer conexiones, cargar datos, etc.
+      print('EjemploService inicializado');
+      _inicializado = true;
+    } catch (e) {
+      throw Exception('Error inicializando EjemploService: $e');
+    }
+  }
+
+  // ============================================================
+  // MÉTODOS PÚBLICOS
+  // ============================================================
+
+  /// Obtener datos desde una fuente.
+  ///
+  /// Parámetros:
+  /// - [id]: Identificador de los datos
+  ///
+  /// Returns: Los datos solicitados
+  ///
+  /// Throws:
+  /// - [Exception] si el servicio no está inicializado
+  /// - [Exception] si hay error en la obtención
+  ///
+  /// Ejemplo:
+  /// ```dart
+  /// try {
+  ///   final datos = await servicio.obtenerDatos('user_123');
+  ///   print(datos);
+  /// } catch (e) {
+  ///   print('Error: $e');
+  /// }
+  /// ```
+  Future<Map<String, dynamic>> obtenerDatos(String id) async {
+    if (!_inicializado) {
+      throw Exception('EjemploService no inicializado');
+    }
+
+    // Verificar caché primero
+    if (_cache.containsKey(id)) {
+      print('Usando caché para $id');
+      return _cache[id];
+    }
+
+    try {
+      // Simular obtención de datos
+      await Future.delayed(const Duration(milliseconds: 500));
+
+      final datos = {
+        'id': id,
+        'nombre': 'Ejemplo $id',
+        'timestamp': DateTime.now().toString(),
+      };
+
+      // Guardar en caché
+      _cache[id] = datos;
+
+      return datos;
+    } catch (e) {
+      throw Exception('Error obtener datos $id: $e');
+    }
+  }
+
+  /// Guardar datos.
+  ///
+  /// Parámetros:
+  /// - [id]: Identificador
+  /// - [datos]: Mapa con los datos
+  ///
+  /// Returns: `true` si fue exitoso
+  ///
+  /// Throws: [Exception] si hay error
+  Future<bool> guardarDatos(String id, Map<String, dynamic> datos) async {
+    if (!_inicializado) {
+      throw Exception('EjemploService no inicializado');
+    }
+
+    try {
+      // Simular guardado
+      await Future.delayed(const Duration(milliseconds: 300));
+
+      _cache[id] = datos;
+      print('Datos guardados: $id');
+
+      return true;
+    } catch (e) {
+      throw Exception('Error guardar datos $id: $e');
+    }
+  }
+
+  /// Eliminar datos del caché.
+  ///
+  /// Parámetros:
+  /// - [id]: Identificador a eliminar
+  void eliminarDelCache(String id) {
+    _cache.remove(id);
+    print('Eliminado del caché: $id');
+  }
+
+  /// Limpiar todo el caché.
+  void limpiarCache() {
+    _cache.clear();
+    print('Caché limpiado');
+  }
+
+  // ============================================================
+  // CLEANUP
+  // ============================================================
+
+  /// Limpiar recursos del servicio.
+  ///
+  /// Se llama cuando el app se cierra (para Singletons).
+  void close() {
+    _cache.clear();
+    _inicializado = false;
+    print('EjemploService cerrado');
+  }
+}
