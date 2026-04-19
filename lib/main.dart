@@ -27,6 +27,16 @@ void main() async {
   runApp(const M3EDemoApp());
 }
 
+Widget _appBarBrandIcon() {
+  return Padding(
+    padding: const EdgeInsets.only(right: 8),
+    child: ClipRRect(
+      borderRadius: BorderRadius.circular(8),
+      child: Image.asset('lib/assets/icono.png', width: 24, height: 24, fit: BoxFit.cover),
+    ),
+  );
+}
+
 // Enums y constantes importados de lib/models/app_models.dart
 
 
@@ -155,10 +165,10 @@ class _M3EDemoAppState extends State<M3EDemoApp> {
   @override
   Widget build(BuildContext context) {
     return DynamicColorBuilder(
-      builder: (lightDynamic, darkDynamic) {
+      builder: (_, __) {
         final seed = _colorPack.seed;
-        final light = lightDynamic ?? ColorScheme.fromSeed(seedColor: seed);
-        final dark = darkDynamic ?? ColorScheme.fromSeed(seedColor: seed, brightness: Brightness.dark);
+        final light = ColorScheme.fromSeed(seedColor: seed);
+        final dark = ColorScheme.fromSeed(seedColor: seed, brightness: Brightness.dark);
 
         return MaterialApp(
           title: 'M3 Expressive Mega Gallery',
@@ -861,7 +871,7 @@ class _ShowcaseScreenState extends State<_ShowcaseScreen> {
         .toList();
     const tasks = ['Revisar métricas de energía', 'Enviar reporte del sprint', 'Sesión de focus 45 min', 'Actualizar presupuesto'];
     return Scaffold(
-      appBar: const AppBarM3E(titleText: 'Material 3 Expressive'),
+      appBar: AppBarM3E(titleText: 'Material 3 Expressive', actions: [_appBarBrandIcon()]),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
@@ -878,14 +888,16 @@ class _ShowcaseScreenState extends State<_ShowcaseScreen> {
             child: Stack(
               children: [
                 Positioned(
-                  top: 16,
-                  right: 14,
-                  child: m3shapes.M3EContainer.softBurst(
-                    width: 86,
-                    height: 86,
-                    color: cs.primary,
-                    child: Icon(Icons.bolt, color: cs.onPrimary),
-                  ).animate(onPlay: (controller) => controller.repeat(reverse: true)).scale(begin: const Offset(0.88, 0.88), end: const Offset(1.08, 1.08), duration: 1400.ms),
+                  top: 4,
+                  right: 4,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(28),
+                    child: SizedBox(
+                      width: 132,
+                      height: 132,
+                      child: Image.asset('lib/assets/icono.png', fit: BoxFit.cover),
+                    ),
+                  ).animate(onPlay: (controller) => controller.repeat(reverse: true)).scale(begin: const Offset(0.92, 0.92), end: const Offset(1.02, 1.02), duration: 1600.ms),
                 ),
                 Positioned(
                   bottom: 16,
@@ -900,7 +912,7 @@ class _ShowcaseScreenState extends State<_ShowcaseScreen> {
                 Positioned(
                   top: isCompact ? 52 : 58,
                   left: 20,
-                  right: isCompact ? 72 : 110,
+                  right: isCompact ? 126 : 160,
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
                     decoration: BoxDecoration(
@@ -1461,7 +1473,7 @@ class _UtilityModuleScreen extends StatelessWidget {
     };
 
     return Scaffold(
-      appBar: AppBarM3E(titleText: module.title),
+      appBar: AppBarM3E(titleText: module.title, actions: [_appBarBrandIcon()]),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
@@ -2167,7 +2179,7 @@ class _ButtonsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const AppBarM3E(titleText: 'Buttons & Toolbar M3E'),
+      appBar: AppBarM3E(titleText: 'Buttons & Toolbar M3E', actions: [_appBarBrandIcon()]),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -2312,7 +2324,7 @@ class _NavigationScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
     return Scaffold(
-      appBar: const AppBarM3E(titleText: 'Navigation M3E'),
+      appBar: AppBarM3E(titleText: 'Navigation M3E', actions: [_appBarBrandIcon()]),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -2400,7 +2412,7 @@ class _ProgressAndMotionScreenState extends State<_ProgressAndMotionScreen> {
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
     return Scaffold(
-      appBar: const AppBarM3E(titleText: 'Progress, Slider & Motion'),
+      appBar: AppBarM3E(titleText: 'Progress, Slider & Motion', actions: [_appBarBrandIcon()]),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
@@ -2527,6 +2539,7 @@ class _RefreshAndAppBarScreenState extends State<_RefreshAndAppBarScreen> {
         actions: [
           IconButtonM3E(icon: const Icon(Icons.replay), onPressed: _onRefresh),
           IconButtonM3E(icon: const Icon(Icons.cleaning_services_outlined), onPressed: _resetAndRefresh),
+          _appBarBrandIcon(),
         ],
       ),
       body: ExpressiveRefreshIndicator.contained(
@@ -2608,7 +2621,7 @@ class _CoreWidgetsScreenState extends State<_CoreWidgetsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const AppBarM3E(titleText: 'm3e_core gallery'),
+      appBar: AppBarM3E(titleText: 'm3e_core gallery', actions: [_appBarBrandIcon()]),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
@@ -2681,7 +2694,7 @@ class _ShapesLabScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
     return Scaffold(
-      appBar: const AppBarM3E(titleText: 'flutter_m3shapes_extended'),
+      appBar: AppBarM3E(titleText: 'flutter_m3shapes_extended', actions: [_appBarBrandIcon()]),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
@@ -3042,7 +3055,7 @@ class _LibrariesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const AppBarM3E(titleText: 'Librerias y Funcionalidades'),
+      appBar: AppBarM3E(titleText: 'Librerias y Funcionalidades', actions: [_appBarBrandIcon()]),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
@@ -3091,7 +3104,7 @@ class _LibraryDocScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBarM3E(titleText: doc.name),
+      appBar: AppBarM3E(titleText: doc.name, actions: [_appBarBrandIcon()]),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
