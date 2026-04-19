@@ -10,7 +10,7 @@ import 'package:m3e_buttons/m3e_buttons.dart' as m3eb;
 import 'package:m3e_collection/m3e_collection.dart';
 import 'package:m3e_core/m3e_core.dart' as m3ec;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:youtube_player_iframe/youtube_player_iframe.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 // ARQUITECTURA: Models, Services, ViewModels, Widgets
 import 'models/app_models.dart';
@@ -339,8 +339,23 @@ class _HomeScreenState extends State<HomeScreen> {
     const _LibrariesScreen(),
   ];
 
+  static const List<_NavItem> _navItems = [
+    _NavItem(icon: Icons.grid_view_rounded, selectedIcon: Icons.grid_view, label: 'Showcase', shortLabel: 'Inicio'),
+    _NavItem(icon: Icons.smart_button_outlined, selectedIcon: Icons.smart_button, label: 'Buttons', shortLabel: 'Botones'),
+    _NavItem(icon: Icons.alt_route_outlined, selectedIcon: Icons.alt_route, label: 'Navigation', shortLabel: 'Nav'),
+    _NavItem(icon: Icons.animation_outlined, selectedIcon: Icons.animation, label: 'Motion', shortLabel: 'Motion'),
+    _NavItem(icon: Icons.refresh_outlined, selectedIcon: Icons.refresh, label: 'Refresh', shortLabel: 'Refresh'),
+    _NavItem(icon: Icons.widgets_outlined, selectedIcon: Icons.widgets, label: 'Core', shortLabel: 'Core'),
+    _NavItem(icon: Icons.category_outlined, selectedIcon: Icons.category, label: 'Shapes', shortLabel: 'Shapes'),
+    _NavItem(icon: Icons.menu_book_outlined, selectedIcon: Icons.menu_book, label: 'Librerias', shortLabel: 'Libs'),
+  ];
+
   Future<void> _openStudioManager(BuildContext context) async {
     final cs = Theme.of(context).colorScheme;
+    var selectedThemeMode = widget.themeMode;
+    var selectedFontPack = widget.fontPack;
+    var selectedColorPack = widget.colorPack;
+
     await showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
@@ -351,77 +366,110 @@ class _HomeScreenState extends State<HomeScreen> {
       builder: (context) {
         return StatefulBuilder(
           builder: (context, setModalState) {
-            return Padding(
-              padding: const EdgeInsets.fromLTRB(20, 18, 20, 28),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('Studio M3E', style: Theme.of(context).textTheme.titleLarge),
-                  const SizedBox(height: 10),
-                  Text('Modo de color', style: Theme.of(context).textTheme.labelLarge),
-                  const SizedBox(height: 8),
-                  SegmentedButton<ThemeMode>(
-                    selected: {widget.themeMode},
-                    onSelectionChanged: (set) {
-                      final mode = set.first;
-                      widget.onThemeModeChanged(mode);
-                      setModalState(() {});
-                    },
-                    segments: const [
-                      ButtonSegment(value: ThemeMode.light, icon: Icon(Icons.light_mode), label: Text('Claro')),
-                      ButtonSegment(value: ThemeMode.dark, icon: Icon(Icons.dark_mode), label: Text('Oscuro')),
-                      ButtonSegment(value: ThemeMode.system, icon: Icon(Icons.auto_mode), label: Text('Sistema')),
+            final maxHeight = MediaQuery.sizeOf(context).height * 0.85;
+            return SafeArea(
+              top: false,
+              child: ConstrainedBox(
+                constraints: BoxConstraints(maxHeight: maxHeight),
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.fromLTRB(20, 18, 20, 28),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Studio M3E', style: Theme.of(context).textTheme.titleLarge),
+                      const SizedBox(height: 10),
+                      Text('Modo de color', style: Theme.of(context).textTheme.labelLarge),
+                      const SizedBox(height: 8),
+                      Wrap(
+                        spacing: 8,
+                        runSpacing: 8,
+                        children: [
+                          ChoiceChip(
+                            selected: selectedThemeMode == ThemeMode.light,
+                            avatar: const Icon(Icons.light_mode),
+                            label: const Text('Claro'),
+                            onSelected: (_) {
+                              selectedThemeMode = ThemeMode.light;
+                              widget.onThemeModeChanged(ThemeMode.light);
+                              setModalState(() {});
+                            },
+                          ),
+                          ChoiceChip(
+                            selected: selectedThemeMode == ThemeMode.dark,
+                            avatar: const Icon(Icons.dark_mode),
+                            label: const Text('Oscuro'),
+                            onSelected: (_) {
+                              selectedThemeMode = ThemeMode.dark;
+                              widget.onThemeModeChanged(ThemeMode.dark);
+                              setModalState(() {});
+                            },
+                          ),
+                          ChoiceChip(
+                            selected: selectedThemeMode == ThemeMode.system,
+                            avatar: const Icon(Icons.auto_mode),
+                            label: const Text('Sistema'),
+                            onSelected: (_) {
+                              selectedThemeMode = ThemeMode.system;
+                              widget.onThemeModeChanged(ThemeMode.system);
+                              setModalState(() {});
+                            },
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      Text('Tipografia activa', style: Theme.of(context).textTheme.labelLarge),
+                      const SizedBox(height: 8),
+                      Wrap(
+                        spacing: 8,
+                        runSpacing: 8,
+                        children: DemoFontPack.values.map((pack) {
+                          final selected = pack == selectedFontPack;
+                          return ChoiceChip(
+                            selected: selected,
+                            label: Text(pack.label),
+                            onSelected: (_) {
+                              selectedFontPack = pack;
+                              widget.onFontPackChanged(pack);
+                              setModalState(() {});
+                            },
+                          );
+                        }).toList(),
+                      ),
+                      const SizedBox(height: 16),
+                      Text('Paleta colorida', style: Theme.of(context).textTheme.labelLarge),
+                      const SizedBox(height: 8),
+                      Wrap(
+                        spacing: 8,
+                        runSpacing: 8,
+                        children: DemoColorPack.values.map((pack) {
+                          final selected = pack == selectedColorPack;
+                          return ChoiceChip(
+                            selected: selected,
+                            avatar: CircleAvatar(backgroundColor: pack.seed),
+                            label: Text(pack.label),
+                            onSelected: (_) {
+                              selectedColorPack = pack;
+                              widget.onColorPackChanged(pack);
+                              setModalState(() {});
+                            },
+                          );
+                        }).toList(),
+                      ),
+                      const SizedBox(height: 10),
+                      ButtonM3E(
+                        label: const Text('Color sorpresa'),
+                        style: ButtonM3EStyle.tonal,
+                        onPressed: () {
+                          final index = (DemoColorPack.values.indexOf(selectedColorPack) + 1) % DemoColorPack.values.length;
+                          selectedColorPack = DemoColorPack.values[index];
+                          widget.onColorPackChanged(selectedColorPack);
+                          setModalState(() {});
+                        },
+                      ),
                     ],
                   ),
-                  const SizedBox(height: 16),
-                  Text('Tipografia activa', style: Theme.of(context).textTheme.labelLarge),
-                  const SizedBox(height: 8),
-                  Wrap(
-                    spacing: 8,
-                    runSpacing: 8,
-                    children: DemoFontPack.values.map((pack) {
-                      final selected = pack == widget.fontPack;
-                      return ChoiceChip(
-                        selected: selected,
-                        label: Text(pack.label),
-                        onSelected: (_) {
-                          widget.onFontPackChanged(pack);
-                          setModalState(() {});
-                        },
-                      );
-                    }).toList(),
-                  ),
-                  const SizedBox(height: 16),
-                  Text('Paleta colorida', style: Theme.of(context).textTheme.labelLarge),
-                  const SizedBox(height: 8),
-                  Wrap(
-                    spacing: 8,
-                    runSpacing: 8,
-                    children: DemoColorPack.values.map((pack) {
-                      final selected = pack == widget.colorPack;
-                      return ChoiceChip(
-                        selected: selected,
-                        avatar: CircleAvatar(backgroundColor: pack.seed),
-                        label: Text(pack.label),
-                        onSelected: (_) {
-                          widget.onColorPackChanged(pack);
-                          setModalState(() {});
-                        },
-                      );
-                    }).toList(),
-                  ),
-                  const SizedBox(height: 10),
-                  ButtonM3E(
-                    label: const Text('Color sorpresa'),
-                    style: ButtonM3EStyle.tonal,
-                    onPressed: () {
-                      final index = (DemoColorPack.values.indexOf(widget.colorPack) + 1) % DemoColorPack.values.length;
-                      widget.onColorPackChanged(DemoColorPack.values[index]);
-                      setModalState(() {});
-                    },
-                  ),
-                ],
+                ),
               ),
             );
           },
@@ -432,6 +480,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final compactLayout = MediaQuery.sizeOf(context).width < 780;
+
     return Scaffold(
       body: _screens[_currentIndex],
       floatingActionButton: FabM3E(
@@ -440,19 +490,295 @@ class _HomeScreenState extends State<HomeScreen> {
         tooltip: 'Studio M3E',
         onPressed: () => _openStudioManager(context),
       ),
-      bottomNavigationBar: NavigationBarM3E(
-        selectedIndex: _currentIndex,
-        onDestinationSelected: (index) => setState(() => _currentIndex = index),
-        destinations: const [
-          NavigationDestinationM3E(icon: Icon(Icons.grid_view_rounded), selectedIcon: Icon(Icons.grid_view), label: 'Showcase'),
-          NavigationDestinationM3E(icon: Icon(Icons.smart_button_outlined), selectedIcon: Icon(Icons.smart_button), label: 'Buttons'),
-          NavigationDestinationM3E(icon: Icon(Icons.alt_route_outlined), selectedIcon: Icon(Icons.alt_route), label: 'Navigation'),
-          NavigationDestinationM3E(icon: Icon(Icons.animation_outlined), selectedIcon: Icon(Icons.animation), label: 'Motion'),
-          NavigationDestinationM3E(icon: Icon(Icons.refresh_outlined), selectedIcon: Icon(Icons.refresh), label: 'Refresh'),
-          NavigationDestinationM3E(icon: Icon(Icons.widgets_outlined), selectedIcon: Icon(Icons.widgets), label: 'Core'),
-          NavigationDestinationM3E(icon: Icon(Icons.category_outlined), selectedIcon: Icon(Icons.category), label: 'Shapes'),
-          NavigationDestinationM3E(icon: Icon(Icons.menu_book_outlined), selectedIcon: Icon(Icons.menu_book), label: 'Librerias'),
-        ],
+      bottomNavigationBar: compactLayout
+          ? _CompactBottomNav(
+              selectedIndex: _currentIndex,
+              items: _navItems,
+              onTap: (index) => setState(() => _currentIndex = index),
+            )
+          : NavigationBarM3E(
+              selectedIndex: _currentIndex,
+              onDestinationSelected: (index) => setState(() => _currentIndex = index),
+              destinations: _navItems
+                  .map(
+                    (item) => NavigationDestinationM3E(
+                      icon: Icon(item.icon),
+                      selectedIcon: Icon(item.selectedIcon),
+                      label: item.label,
+                    ),
+                  )
+                  .toList(),
+            ),
+    );
+  }
+}
+
+class _NavItem {
+  const _NavItem({
+    required this.icon,
+    required this.selectedIcon,
+    required this.label,
+    required this.shortLabel,
+  });
+
+  final IconData icon;
+  final IconData selectedIcon;
+  final String label;
+  final String shortLabel;
+}
+
+class _CompactBottomNav extends StatefulWidget {
+  const _CompactBottomNav({
+    required this.selectedIndex,
+    required this.items,
+    required this.onTap,
+  });
+
+  final int selectedIndex;
+  final List<_NavItem> items;
+  final ValueChanged<int> onTap;
+
+  @override
+  State<_CompactBottomNav> createState() => _CompactBottomNavState();
+}
+
+class _CompactBottomNavState extends State<_CompactBottomNav> {
+  late final ScrollController _scrollController;
+  bool _canScrollLeft = false;
+  bool _canScrollRight = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController = ScrollController()..addListener(_syncScrollIndicators);
+    WidgetsBinding.instance.addPostFrameCallback((_) => _syncScrollIndicators());
+  }
+
+  void _syncScrollIndicators() {
+    if (!_scrollController.hasClients) return;
+    final position = _scrollController.position;
+    final left = position.pixels > 4;
+    final right = position.pixels < (position.maxScrollExtent - 4);
+    if (left != _canScrollLeft || right != _canScrollRight) {
+      setState(() {
+        _canScrollLeft = left;
+        _canScrollRight = right;
+      });
+    }
+  }
+
+  Future<void> _shift(double delta) async {
+    if (!_scrollController.hasClients) return;
+    final position = _scrollController.position;
+    final target = (position.pixels + delta).clamp(0, position.maxScrollExtent).toDouble();
+    await _scrollController.animateTo(
+      target,
+      duration: const Duration(milliseconds: 280),
+      curve: Curves.easeOutCubic,
+    );
+  }
+
+  @override
+  void dispose() {
+    _scrollController
+      ..removeListener(_syncScrollIndicators)
+      ..dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    final accents = <Color>[
+      cs.primary,
+      cs.secondary,
+      cs.tertiary,
+      cs.error,
+      cs.primary,
+      cs.secondary,
+      cs.tertiary,
+      cs.error,
+    ];
+
+    return SafeArea(
+      top: false,
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              cs.surface,
+              cs.surfaceContainerLow,
+            ],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+          border: Border(top: BorderSide(color: cs.outlineVariant.withValues(alpha: 0.5))),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(10, 8, 10, 10),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                children: [
+                  Icon(Icons.swipe_rounded, size: 16, color: cs.primary),
+                  const SizedBox(width: 6),
+                  Expanded(
+                    child: Text(
+                      'Explora más secciones: desliza o usa las flechas',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                            color: cs.onSurfaceVariant,
+                            fontWeight: FontWeight.w700,
+                          ),
+                    ),
+                  ),
+                  IconButtonM3E(
+                    icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 16),
+                    size: IconButtonM3ESize.sm,
+                    variant: IconButtonM3EVariant.tonal,
+                    onPressed: _canScrollLeft ? () => _shift(-220) : null,
+                  ),
+                  IconButtonM3E(
+                    icon: const Icon(Icons.arrow_forward_ios_rounded, size: 16),
+                    size: IconButtonM3ESize.sm,
+                    variant: IconButtonM3EVariant.filled,
+                    onPressed: _canScrollRight ? () => _shift(220) : null,
+                  ),
+                ],
+              ),
+              const SizedBox(height: 6),
+              SizedBox(
+                height: 70,
+                child: Stack(
+                  children: [
+                    Scrollbar(
+                      controller: _scrollController,
+                      thumbVisibility: true,
+                      trackVisibility: false,
+                      thickness: 3,
+                      radius: const Radius.circular(999),
+                      notificationPredicate: (notification) => notification.metrics.axis == Axis.horizontal,
+                      child: ListView.separated(
+                        controller: _scrollController,
+                        padding: const EdgeInsets.symmetric(horizontal: 2),
+                        scrollDirection: Axis.horizontal,
+                        itemCount: widget.items.length,
+                        separatorBuilder: (_, _) => const SizedBox(width: 8),
+                        itemBuilder: (context, index) {
+                          final item = widget.items[index];
+                          final selected = index == widget.selectedIndex;
+                          final accent = accents[index % accents.length];
+
+                          return Material(
+                            color: Colors.transparent,
+                            child: InkWell(
+                              borderRadius: BorderRadius.circular(18),
+                              onTap: () => widget.onTap(index),
+                              child: AnimatedContainer(
+                                duration: const Duration(milliseconds: 240),
+                                width: selected ? 114 : 98,
+                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 7),
+                                decoration: BoxDecoration(
+                                  gradient: selected
+                                      ? LinearGradient(
+                                          colors: [
+                                            accent.withValues(alpha: 0.25),
+                                            cs.secondaryContainer.withValues(alpha: 0.9),
+                                          ],
+                                        )
+                                      : null,
+                                  color: selected ? null : cs.surfaceContainerHigh,
+                                  borderRadius: BorderRadius.circular(18),
+                                  border: Border.all(
+                                    color: selected
+                                        ? accent.withValues(alpha: 0.65)
+                                        : cs.outlineVariant.withValues(alpha: 0.7),
+                                  ),
+                                  boxShadow: selected
+                                      ? [
+                                          BoxShadow(
+                                            color: accent.withValues(alpha: 0.22),
+                                            blurRadius: 12,
+                                            offset: const Offset(0, 4),
+                                          ),
+                                        ]
+                                      : null,
+                                ),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    m3shapes.M3EContainer.pill(
+                                      width: 26,
+                                      height: 26,
+                                      color: selected ? accent : cs.surfaceContainerHighest,
+                                      child: Icon(
+                                        selected ? item.selectedIcon : item.icon,
+                                        size: 15,
+                                        color: selected ? cs.onPrimary : cs.onSurfaceVariant,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      item.shortLabel,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                                            color: selected ? cs.onSecondaryContainer : cs.onSurfaceVariant,
+                                            fontWeight: selected ? FontWeight.w800 : FontWeight.w600,
+                                          ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                    if (_canScrollLeft)
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: IgnorePointer(
+                          child: Container(
+                            width: 18,
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [
+                                  cs.surface,
+                                  cs.surface.withValues(alpha: 0),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    if (_canScrollRight)
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: IgnorePointer(
+                          child: Container(
+                            width: 18,
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                begin: Alignment.centerRight,
+                                end: Alignment.centerLeft,
+                                colors: [
+                                  cs.surface,
+                                  cs.surface.withValues(alpha: 0),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -526,6 +852,7 @@ class _ShowcaseScreenState extends State<_ShowcaseScreen> {
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
+    final isCompact = MediaQuery.sizeOf(context).width < 420;
     final query = _query.trim().toLowerCase();
     final filteredModules = query.isEmpty
       ? _modules
@@ -539,7 +866,7 @@ class _ShowcaseScreenState extends State<_ShowcaseScreen> {
         padding: const EdgeInsets.all(16),
         children: [
           Container(
-            height: 250,
+            height: isCompact ? 218 : 250,
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [cs.primaryContainer, cs.tertiaryContainer, cs.secondaryContainer],
@@ -571,21 +898,27 @@ class _ShowcaseScreenState extends State<_ShowcaseScreen> {
                   ).animate(onPlay: (controller) => controller.repeat(reverse: true)).rotate(begin: -0.05, end: 0.07, duration: 1800.ms),
                 ),
                 Positioned(
-                  top: 58,
+                  top: isCompact ? 52 : 58,
                   left: 20,
-                  right: 110,
+                  right: isCompact ? 72 : 110,
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
                     decoration: BoxDecoration(
                       color: cs.surface.withValues(alpha: 0.34),
                       borderRadius: BorderRadius.circular(20),
                     ),
-                    child: Text(
-                      'EXPLOSION\nM3E',
-                      style: Theme.of(context).textTheme.displayLarge?.copyWith(
-                        color: cs.onPrimaryContainer,
-                        height: 0.95,
-                        fontWeight: FontWeight.w900,
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        isCompact ? 'EXPLOSION M3E' : 'EXPLOSION\nM3E',
+                        maxLines: isCompact ? 1 : 2,
+                        style: Theme.of(context).textTheme.displayLarge?.copyWith(
+                          color: cs.onPrimaryContainer,
+                          height: 0.95,
+                          fontSize: isCompact ? 58 : null,
+                          fontWeight: FontWeight.w900,
+                        ),
                       ),
                     ),
                   ).animate().fadeIn(duration: 500.ms).slideX(begin: -0.12, end: 0),
@@ -722,7 +1055,7 @@ class _ShowcaseScreenState extends State<_ShowcaseScreen> {
                               ),
                             ),
                             Text(
-                              'Material 3 Expressive · Video oficial',
+                              'Material 3 Expressive · Vimeo',
                               style: Theme.of(context).textTheme.labelSmall?.copyWith(
                                 color: cs.onPrimaryContainer.withValues(alpha: 0.72),
                                 letterSpacing: 0.4,
@@ -784,7 +1117,7 @@ class _ShowcaseScreenState extends State<_ShowcaseScreen> {
                   child: AnimatedSwitcher(
                     duration: const Duration(milliseconds: 400),
                     child: _videoVM.ready && _videoVM.controller != null
-                        ? YoutubePlayer(
+                        ? WebViewWidget(
                             key: const ValueKey('player'),
                             controller: _videoVM.controller!,
                           )
@@ -794,10 +1127,21 @@ class _ShowcaseScreenState extends State<_ShowcaseScreen> {
                             child: Stack(
                               fit: StackFit.expand,
                               children: [
-                                Image.network(
-                                  'https://img.youtube.com/vi/${_videoVM.videoId}/maxresdefault.jpg',
-                                  fit: BoxFit.cover,
-                                  errorBuilder: (_, _, _) => Container(color: cs.primaryContainer),
+                                Container(
+                                  decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                      colors: [cs.primaryContainer, cs.tertiaryContainer],
+                                      begin: Alignment.topLeft,
+                                      end: Alignment.bottomRight,
+                                    ),
+                                  ),
+                                  child: Center(
+                                    child: Icon(
+                                      Icons.ondemand_video_rounded,
+                                      size: 88,
+                                      color: cs.onPrimaryContainer.withValues(alpha: 0.35),
+                                    ),
+                                  ),
                                 ),
                                 // Gradiente inferior
                                 Container(
@@ -838,7 +1182,7 @@ class _ShowcaseScreenState extends State<_ShowcaseScreen> {
                                   left: 0,
                                   right: 0,
                                   child: Text(
-                                    'Toca para cargar · Material 3 Expressive',
+                                    'Toca para cargar · Vimeo',
                                     textAlign: TextAlign.center,
                                     style: Theme.of(context).textTheme.labelMedium?.copyWith(
                                       color: Colors.white,
@@ -874,7 +1218,7 @@ class _ShowcaseScreenState extends State<_ShowcaseScreen> {
                               FadeTransition(opacity: anim, child: ScaleTransition(scale: anim, child: child)),
                           child: ButtonM3E(
                             key: ValueKey(_videoVM.playing),
-                            label: Text(_videoVM.playing ? '⏸  Pausar' : '▶  Reproducir'),
+                            label: Text(_videoVM.playing ? '⏸  Pausar Vimeo' : '▶  Reproducir Vimeo'),
                             style: ButtonM3EStyle.filled,
                             onPressed: _videoVM.ready ? _videoVM.playPause : _videoVM.enable,
                           ),
@@ -931,7 +1275,7 @@ class _ShowcaseScreenState extends State<_ShowcaseScreen> {
                             ),
                             const SizedBox(width: 6),
                             Text(
-                              'Toca Reproducir o el thumbnail para cargar el video',
+                              'Si falla embebido, usa fullscreen para abrir Vimeo',
                               style: Theme.of(context).textTheme.labelSmall?.copyWith(
                                 color: cs.onSurfaceVariant,
                               ),
