@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math' as math;
 
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:expressive_loading_indicator/expressive_loading_indicator.dart' as eli;
@@ -35,6 +36,146 @@ Widget _appBarBrandIcon() {
       child: Image.asset('lib/assets/icono.png', width: 24, height: 24, fit: BoxFit.cover),
     ),
   );
+}
+
+PreferredSizeWidget _buildAnimatedHeader(
+  BuildContext context, {
+  required String titleText,
+  List<Widget>? actions,
+}) {
+  return _AnimatedPaletteHeader(titleText: titleText, actions: actions ?? const []);
+}
+
+class _AnimatedPaletteHeader extends StatelessWidget implements PreferredSizeWidget {
+  const _AnimatedPaletteHeader({
+    required this.titleText,
+    required this.actions,
+  });
+
+  final String titleText;
+  final List<Widget> actions;
+
+  @override
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight + 4);
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final cs = theme.colorScheme;
+
+    return AppBar(
+      toolbarHeight: preferredSize.height,
+      elevation: 0,
+      scrolledUnderElevation: 0,
+      backgroundColor: Colors.transparent,
+      surfaceTintColor: Colors.transparent,
+      foregroundColor: cs.onPrimary,
+      iconTheme: IconThemeData(color: cs.onPrimary),
+      actionsIconTheme: IconThemeData(color: cs.onPrimary),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          bottomLeft: Radius.circular(22),
+          bottomRight: Radius.circular(22),
+        ),
+      ),
+      title: Text(
+        titleText,
+        style: theme.textTheme.titleLarge?.copyWith(
+          color: cs.onPrimary,
+          fontWeight: FontWeight.w800,
+        ),
+      ),
+      actions: actions,
+      flexibleSpace: _AnimatedPaletteGradientBand(
+        borderRadius: const BorderRadius.only(
+          bottomLeft: Radius.circular(22),
+          bottomRight: Radius.circular(22),
+        ),
+        showShadow: true,
+        child: const SizedBox.expand(),
+      ),
+    );
+  }
+}
+
+class _AnimatedPaletteGradientBand extends StatefulWidget {
+  const _AnimatedPaletteGradientBand({
+    required this.child,
+    this.borderRadius = BorderRadius.zero,
+    this.showShadow = false,
+  });
+
+  final Widget child;
+  final BorderRadius borderRadius;
+  final bool showShadow;
+
+  @override
+  State<_AnimatedPaletteGradientBand> createState() => _AnimatedPaletteGradientBandState();
+}
+
+class _AnimatedPaletteGradientBandState extends State<_AnimatedPaletteGradientBand>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 8400),
+    )..repeat(reverse: true);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    final c1 = Color.lerp(cs.primary, cs.tertiary, 0.34)!;
+    final c2 = Color.lerp(cs.secondary, cs.primary, 0.46)!;
+    final c3 = Color.lerp(cs.tertiary, cs.secondary, 0.52)!;
+
+    return AnimatedBuilder(
+      animation: _controller,
+      builder: (context, _) {
+        final t = _controller.value;
+        final phaseA = t * math.pi * 2;
+        final phaseB = (1 - t) * math.pi * 2;
+
+        return DecoratedBox(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment(math.sin(phaseA), -1 + (0.42 * math.cos(phaseB))),
+              end: Alignment(-math.sin(phaseB), 1 - (0.35 * math.cos(phaseA))),
+              colors: [
+                c1.withValues(alpha: 0.96),
+                c2.withValues(alpha: 0.94),
+                c3.withValues(alpha: 0.96),
+              ],
+            ),
+            borderRadius: widget.borderRadius,
+            boxShadow: widget.showShadow
+                ? [
+                    BoxShadow(
+                      color: c1.withValues(alpha: 0.28),
+                      blurRadius: 22,
+                      offset: const Offset(0, 8),
+                    ),
+                  ]
+                : null,
+          ),
+          child: ClipRRect(
+            borderRadius: widget.borderRadius,
+            child: widget.child,
+          ),
+        );
+      },
+    );
+  }
 }
 
 // Enums y constantes importados de lib/models/app_models.dart
@@ -491,6 +632,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final compactLayout = MediaQuery.sizeOf(context).width < 780;
+    final cs = Theme.of(context).colorScheme;
 
     return Scaffold(
       body: _screens[_currentIndex],
@@ -500,25 +642,48 @@ class _HomeScreenState extends State<HomeScreen> {
         tooltip: 'Studio M3E',
         onPressed: () => _openStudioManager(context),
       ),
-      bottomNavigationBar: compactLayout
-          ? _CompactBottomNav(
-              selectedIndex: _currentIndex,
-              items: _navItems,
-              onTap: (index) => setState(() => _currentIndex = index),
-            )
-          : NavigationBarM3E(
-              selectedIndex: _currentIndex,
-              onDestinationSelected: (index) => setState(() => _currentIndex = index),
-              destinations: _navItems
-                  .map(
-                    (item) => NavigationDestinationM3E(
-                      icon: Icon(item.icon),
-                      selectedIcon: Icon(item.selectedIcon),
-                      label: item.label,
+      bottomNavigationBar: SafeArea(
+        top: false,
+        minimum: const EdgeInsets.fromLTRB(12, 0, 12, 10),
+        child: _AnimatedPaletteGradientBand(
+          borderRadius: BorderRadius.circular(28),
+          showShadow: true,
+          child: compactLayout
+              ? _CompactBottomNav(
+                  selectedIndex: _currentIndex,
+                  items: _navItems,
+                  onTap: (index) => setState(() => _currentIndex = index),
+                )
+              : Theme(
+                  data: Theme.of(context).copyWith(
+                    navigationBarTheme: NavigationBarThemeData(
+                      height: 72,
+                      backgroundColor: Colors.transparent,
+                      indicatorColor: cs.onPrimary.withValues(alpha: 0.2),
+                      labelTextStyle: WidgetStateProperty.all(
+                        Theme.of(context).textTheme.labelMedium?.copyWith(
+                              color: cs.onPrimary,
+                              fontWeight: FontWeight.w700,
+                            ),
+                      ),
                     ),
-                  )
-                  .toList(),
-            ),
+                  ),
+                  child: NavigationBarM3E(
+                    selectedIndex: _currentIndex,
+                    onDestinationSelected: (index) => setState(() => _currentIndex = index),
+                    destinations: _navItems
+                        .map(
+                          (item) => NavigationDestinationM3E(
+                            icon: Icon(item.icon),
+                            selectedIcon: Icon(item.selectedIcon),
+                            label: item.label,
+                          ),
+                        )
+                        .toList(),
+                  ),
+                ),
+        ),
+      ),
     );
   }
 }
@@ -554,45 +719,16 @@ class _CompactBottomNav extends StatefulWidget {
 
 class _CompactBottomNavState extends State<_CompactBottomNav> {
   late final ScrollController _scrollController;
-  bool _canScrollLeft = false;
-  bool _canScrollRight = true;
 
   @override
   void initState() {
     super.initState();
-    _scrollController = ScrollController()..addListener(_syncScrollIndicators);
-    WidgetsBinding.instance.addPostFrameCallback((_) => _syncScrollIndicators());
-  }
-
-  void _syncScrollIndicators() {
-    if (!_scrollController.hasClients) return;
-    final position = _scrollController.position;
-    final left = position.pixels > 4;
-    final right = position.pixels < (position.maxScrollExtent - 4);
-    if (left != _canScrollLeft || right != _canScrollRight) {
-      setState(() {
-        _canScrollLeft = left;
-        _canScrollRight = right;
-      });
-    }
-  }
-
-  Future<void> _shift(double delta) async {
-    if (!_scrollController.hasClients) return;
-    final position = _scrollController.position;
-    final target = (position.pixels + delta).clamp(0, position.maxScrollExtent).toDouble();
-    await _scrollController.animateTo(
-      target,
-      duration: const Duration(milliseconds: 280),
-      curve: Curves.easeOutCubic,
-    );
+    _scrollController = ScrollController();
   }
 
   @override
   void dispose() {
-    _scrollController
-      ..removeListener(_syncScrollIndicators)
-      ..dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -610,183 +746,82 @@ class _CompactBottomNavState extends State<_CompactBottomNav> {
       cs.error,
     ];
 
-    return SafeArea(
-      top: false,
-      child: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              cs.surface,
-              cs.surfaceContainerLow,
-            ],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-          ),
-          border: Border(top: BorderSide(color: cs.outlineVariant.withValues(alpha: 0.5))),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(10, 8, 10, 10),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Row(
-                children: [
-                  Icon(Icons.swipe_rounded, size: 16, color: cs.primary),
-                  const SizedBox(width: 6),
-                  Expanded(
-                    child: Text(
-                      'Explora más secciones: desliza o usa las flechas',
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                            color: cs.onSurfaceVariant,
-                            fontWeight: FontWeight.w700,
-                          ),
-                    ),
-                  ),
-                  IconButtonM3E(
-                    icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 16),
-                    size: IconButtonM3ESize.sm,
-                    variant: IconButtonM3EVariant.tonal,
-                    onPressed: _canScrollLeft ? () => _shift(-220) : null,
-                  ),
-                  IconButtonM3E(
-                    icon: const Icon(Icons.arrow_forward_ios_rounded, size: 16),
-                    size: IconButtonM3ESize.sm,
-                    variant: IconButtonM3EVariant.filled,
-                    onPressed: _canScrollRight ? () => _shift(220) : null,
-                  ),
-                ],
-              ),
-              const SizedBox(height: 6),
-              SizedBox(
-                height: 70,
-                child: Stack(
-                  children: [
-                    Scrollbar(
-                      controller: _scrollController,
-                      thumbVisibility: true,
-                      trackVisibility: false,
-                      thickness: 3,
-                      radius: const Radius.circular(999),
-                      notificationPredicate: (notification) => notification.metrics.axis == Axis.horizontal,
-                      child: ListView.separated(
-                        controller: _scrollController,
-                        padding: const EdgeInsets.symmetric(horizontal: 2),
-                        scrollDirection: Axis.horizontal,
-                        itemCount: widget.items.length,
-                        separatorBuilder: (_, _) => const SizedBox(width: 8),
-                        itemBuilder: (context, index) {
-                          final item = widget.items[index];
-                          final selected = index == widget.selectedIndex;
-                          final accent = accents[index % accents.length];
+    return SizedBox(
+      height: 72,
+      child: Align(
+        alignment: Alignment.center,
+        child: Scrollbar(
+          controller: _scrollController,
+          thumbVisibility: false,
+          notificationPredicate: (notification) => notification.metrics.axis == Axis.horizontal,
+          child: ListView.separated(
+            controller: _scrollController,
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+            scrollDirection: Axis.horizontal,
+            itemCount: widget.items.length,
+            separatorBuilder: (_, _) => const SizedBox(width: 8),
+            itemBuilder: (context, index) {
+              final item = widget.items[index];
+              final selected = index == widget.selectedIndex;
+              final accent = accents[index % accents.length];
 
-                          return Material(
-                            color: Colors.transparent,
-                            child: InkWell(
-                              borderRadius: BorderRadius.circular(18),
-                              onTap: () => widget.onTap(index),
-                              child: AnimatedContainer(
-                                duration: const Duration(milliseconds: 240),
-                                width: selected ? 114 : 98,
-                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 7),
-                                decoration: BoxDecoration(
-                                  gradient: selected
-                                      ? LinearGradient(
-                                          colors: [
-                                            accent.withValues(alpha: 0.25),
-                                            cs.secondaryContainer.withValues(alpha: 0.9),
-                                          ],
-                                        )
-                                      : null,
-                                  color: selected ? null : cs.surfaceContainerHigh,
-                                  borderRadius: BorderRadius.circular(18),
-                                  border: Border.all(
-                                    color: selected
-                                        ? accent.withValues(alpha: 0.65)
-                                        : cs.outlineVariant.withValues(alpha: 0.7),
-                                  ),
-                                  boxShadow: selected
-                                      ? [
-                                          BoxShadow(
-                                            color: accent.withValues(alpha: 0.22),
-                                            blurRadius: 12,
-                                            offset: const Offset(0, 4),
-                                          ),
-                                        ]
-                                      : null,
-                                ),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    m3shapes.M3EContainer.pill(
-                                      width: 26,
-                                      height: 26,
-                                      color: selected ? accent : cs.surfaceContainerHighest,
-                                      child: Icon(
-                                        selected ? item.selectedIcon : item.icon,
-                                        size: 15,
-                                        color: selected ? cs.onPrimary : cs.onSurfaceVariant,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 4),
-                                    Text(
-                                      item.shortLabel,
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                                            color: selected ? cs.onSecondaryContainer : cs.onSurfaceVariant,
-                                            fontWeight: selected ? FontWeight.w800 : FontWeight.w600,
-                                          ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          );
-                        },
+              return Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(999),
+                  onTap: () => widget.onTap(index),
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 240),
+                    curve: Curves.easeOutCubic,
+                    padding: EdgeInsets.symmetric(horizontal: selected ? 14 : 12, vertical: 8),
+                    decoration: BoxDecoration(
+                      gradient: selected
+                          ? LinearGradient(
+                              colors: [
+                                accent.withValues(alpha: 0.62),
+                                cs.primary.withValues(alpha: 0.72),
+                              ],
+                            )
+                          : null,
+                      color: selected ? null : cs.surface.withValues(alpha: 0.2),
+                      borderRadius: BorderRadius.circular(999),
+                      border: Border.all(
+                        color: selected
+                            ? cs.onPrimary.withValues(alpha: 0.42)
+                            : cs.onPrimary.withValues(alpha: 0.28),
                       ),
+                      boxShadow: selected
+                          ? [
+                              BoxShadow(
+                                color: accent.withValues(alpha: 0.28),
+                                blurRadius: 14,
+                                offset: const Offset(0, 4),
+                              ),
+                            ]
+                          : null,
                     ),
-                    if (_canScrollLeft)
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: IgnorePointer(
-                          child: Container(
-                            width: 18,
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                colors: [
-                                  cs.surface,
-                                  cs.surface.withValues(alpha: 0),
-                                ],
-                              ),
-                            ),
-                          ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          selected ? item.selectedIcon : item.icon,
+                          size: 18,
+                          color: cs.onPrimary,
                         ),
-                      ),
-                    if (_canScrollRight)
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: IgnorePointer(
-                          child: Container(
-                            width: 18,
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                begin: Alignment.centerRight,
-                                end: Alignment.centerLeft,
-                                colors: [
-                                  cs.surface,
-                                  cs.surface.withValues(alpha: 0),
-                                ],
+                        const SizedBox(width: 6),
+                        Text(
+                          item.shortLabel,
+                          style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                                color: cs.onPrimary,
+                                fontWeight: selected ? FontWeight.w800 : FontWeight.w600,
                               ),
-                            ),
-                          ),
                         ),
-                      ),
-                  ],
+                      ],
+                    ),
+                  ),
                 ),
-              ),
-            ],
+              );
+            },
           ),
         ),
       ),
@@ -871,7 +906,7 @@ class _ShowcaseScreenState extends State<_ShowcaseScreen> {
         .toList();
     const tasks = ['Revisar métricas de energía', 'Enviar reporte del sprint', 'Sesión de focus 45 min', 'Actualizar presupuesto'];
     return Scaffold(
-      appBar: AppBarM3E(titleText: 'Material 3 Expressive', actions: [_appBarBrandIcon()]),
+      appBar: _buildAnimatedHeader(context, titleText: 'Material 3 Expressive', actions: [_appBarBrandIcon()]),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
@@ -1473,7 +1508,7 @@ class _UtilityModuleScreen extends StatelessWidget {
     };
 
     return Scaffold(
-      appBar: AppBarM3E(titleText: module.title, actions: [_appBarBrandIcon()]),
+      appBar: _buildAnimatedHeader(context, titleText: module.title, actions: [_appBarBrandIcon()]),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
@@ -2179,7 +2214,7 @@ class _ButtonsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBarM3E(titleText: 'Buttons & Toolbar M3E', actions: [_appBarBrandIcon()]),
+      appBar: _buildAnimatedHeader(context, titleText: 'Buttons & Toolbar M3E', actions: [_appBarBrandIcon()]),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -2324,7 +2359,7 @@ class _NavigationScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
     return Scaffold(
-      appBar: AppBarM3E(titleText: 'Navigation M3E', actions: [_appBarBrandIcon()]),
+      appBar: _buildAnimatedHeader(context, titleText: 'Navigation M3E', actions: [_appBarBrandIcon()]),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -2412,7 +2447,7 @@ class _ProgressAndMotionScreenState extends State<_ProgressAndMotionScreen> {
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
     return Scaffold(
-      appBar: AppBarM3E(titleText: 'Progress, Slider & Motion', actions: [_appBarBrandIcon()]),
+      appBar: _buildAnimatedHeader(context, titleText: 'Progress, Slider & Motion', actions: [_appBarBrandIcon()]),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
@@ -2534,7 +2569,8 @@ class _RefreshAndAppBarScreenState extends State<_RefreshAndAppBarScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBarM3E(
+      appBar: _buildAnimatedHeader(
+        context,
         titleText: 'expressive_refresh + app_bar_m3e',
         actions: [
           IconButtonM3E(icon: const Icon(Icons.replay), onPressed: _onRefresh),
@@ -2621,7 +2657,7 @@ class _CoreWidgetsScreenState extends State<_CoreWidgetsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBarM3E(titleText: 'm3e_core gallery', actions: [_appBarBrandIcon()]),
+      appBar: _buildAnimatedHeader(context, titleText: 'm3e_core gallery', actions: [_appBarBrandIcon()]),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
@@ -2694,7 +2730,7 @@ class _ShapesLabScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
     return Scaffold(
-      appBar: AppBarM3E(titleText: 'flutter_m3shapes_extended', actions: [_appBarBrandIcon()]),
+      appBar: _buildAnimatedHeader(context, titleText: 'flutter_m3shapes_extended', actions: [_appBarBrandIcon()]),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
@@ -3055,7 +3091,7 @@ class _LibrariesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBarM3E(titleText: 'Librerias y Funcionalidades', actions: [_appBarBrandIcon()]),
+      appBar: _buildAnimatedHeader(context, titleText: 'Librerias y Funcionalidades', actions: [_appBarBrandIcon()]),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
@@ -3104,7 +3140,7 @@ class _LibraryDocScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBarM3E(titleText: doc.name, actions: [_appBarBrandIcon()]),
+      appBar: _buildAnimatedHeader(context, titleText: doc.name, actions: [_appBarBrandIcon()]),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
