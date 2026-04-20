@@ -16,18 +16,19 @@ class _ProgressAndMotionScreenState extends State<_ProgressAndMotionScreen> {
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
       appBar: _buildAnimatedHeader(context, titleText: 'Progress, Slider & Motion', actions: [_appBarBrandIcon()]),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          const _HeroBlast(
-            title: 'Motion and Progress Lab',
-            subtitle: 'Indicadores morfologicos, sliders y micro-animaciones continuas.',
+          _HeroBlast(
+            title: l10n.progressLabTitle,
+            subtitle: l10n.progressLabSubtitle,
             icon: Icons.animation,
           ),
           const SizedBox(height: 16),
-          Text('Progress Indicator M3E', style: Theme.of(context).textTheme.headlineMedium),
+          Text(l10n.progressIndicatorTitle, style: Theme.of(context).textTheme.headlineMedium),
           const SizedBox(height: 12),
           LinearProgressIndicatorM3E(value: _value),
           const SizedBox(height: 14),
@@ -43,7 +44,7 @@ class _ProgressAndMotionScreenState extends State<_ProgressAndMotionScreen> {
             ],
           ),
           const SizedBox(height: 28),
-          Text('Slider M3E', style: Theme.of(context).textTheme.titleLarge),
+          Text(l10n.progressSliderTitle, style: Theme.of(context).textTheme.titleLarge),
           const SizedBox(height: 12),
           SliderM3E(
             value: _value,
@@ -59,7 +60,7 @@ class _ProgressAndMotionScreenState extends State<_ProgressAndMotionScreen> {
             onChanged: (_) {},
           ),
           const SizedBox(height: 28),
-          Text('Motion demo', style: Theme.of(context).textTheme.titleLarge),
+          Text(l10n.progressMotionDemoTitle, style: Theme.of(context).textTheme.titleLarge),
           const SizedBox(height: 12),
           GestureDetector(
             onTap: () => setState(() => _toggled = !_toggled),

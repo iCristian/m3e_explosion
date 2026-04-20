@@ -70,7 +70,7 @@ class _ShowcaseScreenState extends State<_ShowcaseScreen> {
       : _modules
         .where((module) => '${module.title} ${module.subtitle}'.toLowerCase().contains(query))
         .toList();
-    const tasks = ['Revisar métricas de energía', 'Enviar reporte del sprint', 'Sesión de focus 45 min', 'Actualizar presupuesto'];
+    final tasks = [l10n.taskEnergyMetrics, l10n.taskSprintReport, l10n.taskFocusSession, l10n.taskBudgetUpdate];
     return Scaffold(
       appBar: _buildAnimatedHeader(context, titleText: 'Material 3 Expressive', actions: [_appBarBrandIcon()]),
       body: ListView(
@@ -153,7 +153,7 @@ class _ShowcaseScreenState extends State<_ShowcaseScreen> {
           ).animate().fadeIn(duration: 450.ms).scale(begin: const Offset(0.92, 0.92), end: const Offset(1, 1)),
           const SizedBox(height: 8),
           Text(
-            'Primera vista explosiva, motion continuo y controles de personalizacion para llevar M3E al limite.',
+            l10n.showcaseFirstViewDesc,
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: cs.onSurfaceVariant),
           ),
           const SizedBox(height: 16),
@@ -163,14 +163,14 @@ class _ShowcaseScreenState extends State<_ShowcaseScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Personalizacion Viva', style: Theme.of(context).textTheme.titleLarge),
+                  Text(l10n.showcaseCustomizationTitle, style: Theme.of(context).textTheme.titleLarge),
                   const SizedBox(height: 10),
-                  Text('Intensidad de energia', style: Theme.of(context).textTheme.labelLarge),
+                  Text(l10n.showcaseEnergyIntensity, style: Theme.of(context).textTheme.labelLarge),
                   Slider(
                     value: _energy,
                     onChanged: (value) => setState(() => _energy = value),
                   ),
-                  Text('Organicidad de forma', style: Theme.of(context).textTheme.labelLarge),
+                  Text(l10n.showcaseOrganicityLabel, style: Theme.of(context).textTheme.labelLarge),
                   Slider(
                     value: _organic,
                     onChanged: (value) => setState(() => _organic = value),
@@ -206,10 +206,10 @@ class _ShowcaseScreenState extends State<_ShowcaseScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Color Burst', style: Theme.of(context).textTheme.titleLarge),
+                      Text(l10n.showcaseColorBurstTitle, style: Theme.of(context).textTheme.titleLarge),
                   const SizedBox(height: 8),
                   Text(
-                    'Vista rápida de tonos activos del tema con animación de pulso.',
+                        l10n.showcaseColorBurstDesc,
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
                   const SizedBox(height: 12),
@@ -261,14 +261,14 @@ class _ShowcaseScreenState extends State<_ShowcaseScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'M3E Media Stage',
+                              l10n.showcaseMediaStageTitle,
                               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                                 color: cs.onPrimaryContainer,
                                 fontWeight: FontWeight.w800,
                               ),
                             ),
                             Text(
-                              'Material 3 Expressive · Vimeo',
+                              l10n.showcaseMediaStageSubtitle,
                               style: Theme.of(context).textTheme.labelSmall?.copyWith(
                                 color: cs.onPrimaryContainer.withValues(alpha: 0.72),
                                 letterSpacing: 0.4,
@@ -395,7 +395,7 @@ class _ShowcaseScreenState extends State<_ShowcaseScreen> {
                                   left: 0,
                                   right: 0,
                                   child: Text(
-                                    'Toca para cargar · Vimeo',
+                                    l10n.showcaseVideoLoadHint,
                                     textAlign: TextAlign.center,
                                     style: Theme.of(context).textTheme.labelMedium?.copyWith(
                                       color: Colors.white,
@@ -431,7 +431,7 @@ class _ShowcaseScreenState extends State<_ShowcaseScreen> {
                               FadeTransition(opacity: anim, child: ScaleTransition(scale: anim, child: child)),
                           child: ButtonM3E(
                             key: ValueKey(_videoVM.playing),
-                            label: Text(_videoVM.playing ? '⏸  Pausar Vimeo' : '▶  Reproducir Vimeo'),
+                            label: Text(_videoVM.playing ? '⏸  ${l10n.showcaseVideoPauseBtn}' : '▶  ${l10n.showcaseVideoPlayBtn}'),
                             style: ButtonM3EStyle.filled,
                             onPressed: _videoVM.ready ? _videoVM.playPause : _videoVM.enable,
                           ),
@@ -443,7 +443,7 @@ class _ShowcaseScreenState extends State<_ShowcaseScreen> {
                         children: [
                           Expanded(
                             child: ButtonM3E(
-                              label: Text(_videoVM.muted ? '🔊  Sonido' : '🔇  Silenciar'),
+                                label: Text(_videoVM.muted ? '🔊  ${l10n.showcaseVideoUnmuteBtn}' : '🔇  ${l10n.showcaseVideoMuteBtn}'),
                               style: ButtonM3EStyle.tonal,
                               onPressed: _videoVM.ready ? _videoVM.toggleMute : null,
                             ),
@@ -451,7 +451,7 @@ class _ShowcaseScreenState extends State<_ShowcaseScreen> {
                           const SizedBox(width: 8),
                           Expanded(
                             child: ButtonM3E(
-                              label: const Text('↺  Reiniciar'),
+                                label: Text('↺  ${l10n.showcaseVideoRestartBtn}'),
                               style: ButtonM3EStyle.outlined,
                               onPressed: _videoVM.ready ? _videoVM.restart : null,
                             ),
@@ -488,7 +488,7 @@ class _ShowcaseScreenState extends State<_ShowcaseScreen> {
                             ),
                             const SizedBox(width: 6),
                             Text(
-                              'Si falla embebido, usa fullscreen para abrir Vimeo',
+                              l10n.showcaseVideoEmbedFailHint,
                               style: Theme.of(context).textTheme.labelSmall?.copyWith(
                                 color: cs.onSurfaceVariant,
                               ),
@@ -504,7 +504,7 @@ class _ShowcaseScreenState extends State<_ShowcaseScreen> {
           ).animate().fadeIn(delay: 220.ms).slideY(begin: 0.06, end: 0),
           const SizedBox(height: 24),
           SearchBar(
-            hintText: 'Busca una funcionalidad...',
+            hintText: l10n.showcaseSearchHint,
             onChanged: (value) => setState(() => _query = value),
             leading: const Icon(Icons.search),
             trailing: [
@@ -531,7 +531,7 @@ class _ShowcaseScreenState extends State<_ShowcaseScreen> {
                   Row(
                     children: [
                       Expanded(
-                        child: Text('Panel de Productividad', style: Theme.of(context).textTheme.titleLarge),
+                        child: Text(l10n.showcaseProductivityPanelTitle, style: Theme.of(context).textTheme.titleLarge),
                       ),
                       const SizedBox(width: 10),
                       SizedBox(
@@ -549,17 +549,17 @@ class _ShowcaseScreenState extends State<_ShowcaseScreen> {
                     runSpacing: 10,
                     children: [
                       FilterChip(
-                        label: const Text('Focus Mode'),
+                        label: Text(l10n.showcaseFocusModeLabel),
                         selected: _focusMode,
                         onSelected: (selected) => setState(() => _focusMode = selected),
                       ),
                       FilterChip(
-                        label: const Text('Smart Alerts'),
+                        label: Text(l10n.showcaseSmartAlertsLabel),
                         selected: _smartAlerts,
                         onSelected: (selected) => setState(() => _smartAlerts = selected),
                       ),
                       ButtonM3E(
-                        label: const Text('Boost +5%'),
+                        label: Text(l10n.showcaseBoostBtn),
                         style: ButtonM3EStyle.tonal,
                         onPressed: () => setState(() => _productivity = (_productivity + 0.05).clamp(0.0, 1.0)),
                       ),
@@ -570,7 +570,7 @@ class _ShowcaseScreenState extends State<_ShowcaseScreen> {
             ),
           ).animate().fadeIn(delay: 140.ms).slideY(begin: 0.06, end: 0),
           const SizedBox(height: 16),
-          Text('Módulos activos', style: Theme.of(context).textTheme.titleLarge),
+          Text(l10n.showcaseActiveModulesTitle, style: Theme.of(context).textTheme.titleLarge),
           const SizedBox(height: 10),
           ...filteredModules.asMap().entries.map((entry) {
             final index = entry.key;
@@ -603,7 +603,7 @@ class _ShowcaseScreenState extends State<_ShowcaseScreen> {
           if (filteredModules.isEmpty) ...[
             const SizedBox(height: 12),
             Text(
-              'No se encontraron funcionalidades con "$query".',
+              '${l10n.showcaseNoResults}$query".',
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: cs.onSurfaceVariant),
             ),
           ],
@@ -615,7 +615,7 @@ class _ShowcaseScreenState extends State<_ShowcaseScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Agenda inteligente de hoy', style: Theme.of(context).textTheme.titleLarge),
+                  Text(l10n.showcaseAgendaTodayTitle, style: Theme.of(context).textTheme.titleLarge),
                   const SizedBox(height: 8),
                   m3ec.M3ECardColumn(
                     children: List.generate(tasks.length, (index) {
@@ -629,7 +629,7 @@ class _ShowcaseScreenState extends State<_ShowcaseScreen> {
                           ),
                         ),
                         trailing: ButtonM3E(
-                          label: Text(done ? 'Hecho' : 'Marcar'),
+                          label: Text(done ? l10n.showcaseAgendaDoneBtn : l10n.showcaseAgendaMarkBtn),
                           size: ButtonM3ESize.sm,
                           style: done ? ButtonM3EStyle.tonal : ButtonM3EStyle.outlined,
                           onPressed: () {

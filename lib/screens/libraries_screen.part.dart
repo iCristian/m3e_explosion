@@ -206,6 +206,7 @@ class _LibrariesScreen extends StatelessWidget {
   Widget _packageCard(
     BuildContext context, {
     required _LibraryDoc doc,
+    required AppLocalizations l10n,
   }) {
     final cs = Theme.of(context).colorScheme;
     return Card(
@@ -241,7 +242,7 @@ class _LibrariesScreen extends StatelessWidget {
               ),
               const SizedBox(height: 10),
               ButtonM3E(
-                label: const Text('Ver documentación avanzada'),
+                label: Text(l10n.librariesViewDocs),
                 style: ButtonM3EStyle.tonal,
                 onPressed: () => _openDoc(context, doc),
               ),
@@ -254,22 +255,23 @@ class _LibrariesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
-      appBar: _buildAnimatedHeader(context, titleText: 'Librerias y Funcionalidades', actions: [_appBarBrandIcon()]),
+      appBar: _buildAnimatedHeader(context, titleText: l10n.librariesTitle, actions: [_appBarBrandIcon()]),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          const _HeroBlast(
-            title: 'Librerias en uso',
-            subtitle: 'Referencia rapida de paquetes y funcionalidades de esta demo.',
+          _HeroBlast(
+            title: l10n.librariesIntroTitle,
+            subtitle: l10n.librariesIntroDesc,
             icon: Icons.menu_book,
           ),
           const SizedBox(height: 16),
-          Text('Stack de la mega galeria', style: Theme.of(context).textTheme.headlineMedium),
+          Text(l10n.librariesStackTitle, style: Theme.of(context).textTheme.headlineMedium),
           const SizedBox(height: 8),
-          Text('Documentación técnica navegable por librería con integración real, snippets y preview visual.'),
+          Text(l10n.librariesStackDesc),
           const SizedBox(height: 16),
-          ..._docs.map((doc) => _packageCard(context, doc: doc)),
+          ..._docs.map((doc) => _packageCard(context, doc: doc, l10n: l10n)),
           const SizedBox(height: 16),
           const _CreditsSection(),
           const SizedBox(height: 16),
@@ -280,13 +282,13 @@ class _LibrariesScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Lineamientos de interfaz M3 Expressive', style: Theme.of(context).textTheme.titleLarge),
+                  Text(l10n.librariesGuidelinesTitle, style: Theme.of(context).textTheme.titleLarge),
                   const SizedBox(height: 8),
-                  Text('1. Jerarquía visual fuerte con tipografía clara y bloques protagonistas.'),
-                  Text('2. Movimiento significativo: transición de entrada, feedback y estado.'),
-                  Text('3. Personalización visible: tema, tipografía y paleta accesibles.'),
-                  Text('4. Color como sistema: usa seed + superficies para cohesión.'),
-                  Text('5. Componentes expresivos sin sacrificar legibilidad y accesibilidad.'),
+                  Text(l10n.librariesGuideline1),
+                  Text(l10n.librariesGuideline2),
+                  Text(l10n.librariesGuideline3),
+                  Text(l10n.librariesGuideline4),
+                  Text(l10n.librariesGuideline5),
                 ],
               ),
             ),
@@ -303,6 +305,7 @@ class _CreditsSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
+    final l10n = AppLocalizations.of(context);
 
     Future<void> openGithubProfile() async {
       final uri = Uri.parse('https://github.com/icristian');
@@ -357,7 +360,7 @@ class _CreditsSection extends StatelessWidget {
                 const SizedBox(width: 12),
                 Expanded(
                   child: Text(
-                    'Créditos y código fuente',
+                    l10n.librariesCreditsTitle,
                     style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                           fontWeight: FontWeight.w800,
                         ),
@@ -372,38 +375,38 @@ class _CreditsSection extends StatelessWidget {
               children: [
                 Chip(
                   avatar: Icon(Icons.link_rounded, size: 16, color: cs.onSecondaryContainer),
-                  label: const Text('Open source'),
+                  label: Text(l10n.librariesOpenSource),
                   backgroundColor: cs.secondaryContainer.withValues(alpha: 0.85),
                 ),
                 Chip(
                   avatar: Icon(Icons.palette_rounded, size: 16, color: cs.onPrimaryContainer),
-                  label: const Text('M3 Expressive'),
+                  label: Text(l10n.m3Expressive),
                   backgroundColor: cs.primaryContainer.withValues(alpha: 0.85),
                 ),
               ],
             ),
             const SizedBox(height: 12),
             Text(
-              'Autor: Cristian Carreño León',
+              l10n.librariesAuthor,
               style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700),
             ),
             const SizedBox(height: 4),
-            Text('Profesor de Matemática y Computación', style: Theme.of(context).textTheme.bodyLarge),
+            Text(l10n.librariesRole1, style: Theme.of(context).textTheme.bodyLarge),
             const SizedBox(height: 8),
-            Text('Mag. Comunicación educativa, Nvas. Tecnologías', style: Theme.of(context).textTheme.bodyMedium),
+            Text(l10n.librariesRole2, style: Theme.of(context).textTheme.bodyMedium),
             const SizedBox(height: 4),
-            Text('Dipl. Data Science', style: Theme.of(context).textTheme.bodyMedium),
+            Text(l10n.librariesRole3, style: Theme.of(context).textTheme.bodyMedium),
             const SizedBox(height: 14),
             Row(
               children: [
                 Expanded(
                   child: ButtonM3E(
-                    label: const Row(
+                    label: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.open_in_new_rounded, size: 16),
-                        SizedBox(width: 6),
-                        Text('Perfil GitHub'),
+                        const Icon(Icons.open_in_new_rounded, size: 16),
+                        const SizedBox(width: 6),
+                        Text(l10n.librariesGithubBtn),
                       ],
                     ),
                     style: ButtonM3EStyle.tonal,
@@ -413,12 +416,12 @@ class _CreditsSection extends StatelessWidget {
                 const SizedBox(width: 10),
                 Expanded(
                   child: ButtonM3E(
-                    label: const Row(
+                    label: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.code_rounded, size: 16),
-                        SizedBox(width: 6),
-                        Text('Código fuente'),
+                        const Icon(Icons.code_rounded, size: 16),
+                        const SizedBox(width: 6),
+                        Text(l10n.librariesSourceBtn),
                       ],
                     ),
                     style: ButtonM3EStyle.filled,

@@ -46,19 +46,20 @@ class _RefreshAndAppBarScreenState extends State<_RefreshAndAppBarScreen> {
     await _onRefresh();
   }
 
-  String _formatLastRefresh() {
+  String _formatLastRefresh(AppLocalizations l10n) {
     final date = _lastRefreshAt;
     if (date == null) {
-      return 'Sin refrescos aún';
+      return l10n.refreshNoItemsLabel;
     }
     final h = date.hour.toString().padLeft(2, '0');
     final m = date.minute.toString().padLeft(2, '0');
     final s = date.second.toString().padLeft(2, '0');
-    return 'Último refresh: $h:$m:$s';
+    return '${l10n.refreshLastRefresh}$h:$m:$s';
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
       appBar: _buildAnimatedHeader(
         context,
@@ -83,10 +84,10 @@ class _RefreshAndAppBarScreenState extends State<_RefreshAndAppBarScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Laboratorio de Refresh', style: Theme.of(context).textTheme.titleLarge),
+                      Text(l10n.refreshDemoTitle, style: Theme.of(context).textTheme.titleLarge),
                       const SizedBox(height: 6),
                       Text(
-                        'Haz pull-to-refresh o usa los botones para forzar recarga y ver el comportamiento en vivo.',
+                        l10n.refreshDemoSubtitle,
                         style: Theme.of(context).textTheme.bodyMedium,
                       ),
                       const SizedBox(height: 10),
@@ -95,12 +96,12 @@ class _RefreshAndAppBarScreenState extends State<_RefreshAndAppBarScreen> {
                         runSpacing: 10,
                         children: [
                           ButtonM3E(
-                            label: Text(_isRefreshing ? 'Refrescando...' : 'Forzar refresh'),
+                            label: Text(_isRefreshing ? l10n.refreshRefreshing : l10n.refreshForceBtn),
                             onPressed: _isRefreshing ? null : _onRefresh,
                             style: ButtonM3EStyle.filled,
                           ),
                           ButtonM3E(
-                            label: const Text('Reset + Refresh'),
+                            label: Text(l10n.refreshResetBtn),
                             onPressed: _isRefreshing ? null : _resetAndRefresh,
                             style: ButtonM3EStyle.tonal,
                           ),
@@ -109,12 +110,12 @@ class _RefreshAndAppBarScreenState extends State<_RefreshAndAppBarScreen> {
                       const SizedBox(height: 12),
                       Row(
                         children: [
-                          Expanded(child: Text('Refresh ejecutados: $_refreshCount')),
+                          Expanded(child: Text('${l10n.refreshCountLabel}$_refreshCount')),
                           if (_isRefreshing) const SizedBox(width: 24, height: 24, child: eli.ExpressiveLoadingIndicator()),
                         ],
                       ),
                       const SizedBox(height: 6),
-                      Text(_formatLastRefresh(), style: Theme.of(context).textTheme.bodySmall),
+                      Text(_formatLastRefresh(l10n), style: Theme.of(context).textTheme.bodySmall),
                     ],
                   ),
                 ),
@@ -124,8 +125,8 @@ class _RefreshAndAppBarScreenState extends State<_RefreshAndAppBarScreen> {
             return Card(
               child: ListTile(
                 leading: Icon(item.isEven ? Icons.widgets : Icons.auto_awesome),
-                title: Text('Componente demostrativo #$item'),
-                subtitle: const Text('Haz pull-to-refresh para insertar más elementos'),
+                title: Text('${l10n.refreshComponentItem}$item'),
+                subtitle: Text(l10n.refreshInsertInstruction),
               ),
             );
           },
