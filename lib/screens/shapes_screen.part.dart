@@ -99,7 +99,8 @@ class _ShapesLabScreen extends StatelessWidget {
                 alignment: Alignment.center,
                 children: [
                   m3shapes.M3EContainer.softBurst(width: 100, height: 100,
-                    color: cs.primary.withValues(alpha: 0.25)),
+                    color: cs.primary.withValues(alpha: 0.25),
+                    child: const SizedBox.shrink()),
                   m3shapes.M3EContainer.gem(width: 68, height: 68, color: cs.primary,
                     child: Icon(Icons.star, color: cs.onPrimary, size: 28)),
                 ],
@@ -112,7 +113,8 @@ class _ShapesLabScreen extends StatelessWidget {
                 alignment: Alignment.center,
                 children: [
                   m3shapes.M3EContainer.flower(width: 100, height: 100,
-                    color: cs.secondary.withValues(alpha: 0.25)),
+                    color: cs.secondary.withValues(alpha: 0.25),
+                    child: const SizedBox.shrink()),
                   m3shapes.M3EContainer.puffyDiamond(width: 68, height: 68, color: cs.secondary,
                     child: Icon(Icons.favorite, color: cs.onSecondary, size: 28)),
                 ],
@@ -122,7 +124,8 @@ class _ShapesLabScreen extends StatelessWidget {
                 alignment: Alignment.center,
                 children: [
                   m3shapes.M3EContainer.boom(width: 110, height: 110,
-                    color: cs.tertiary.withValues(alpha: 0.18)),
+                    color: cs.tertiary.withValues(alpha: 0.18),
+                    child: const SizedBox.shrink()),
                   m3shapes.M3EContainer.flower(width: 72, height: 72, color: cs.tertiary,
                     child: Icon(Icons.bolt, color: cs.onTertiary, size: 30)),
                 ],

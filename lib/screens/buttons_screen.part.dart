@@ -7,6 +7,7 @@ class _ButtonsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
       appBar: _buildAnimatedHeader(context, titleText: 'Buttons & Toolbar M3E', actions: [_appBarBrandIcon()]),
       body: SingleChildScrollView(
@@ -14,50 +15,50 @@ class _ButtonsScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const _HeroBlast(
-              title: 'Buttons Playground',
-              subtitle: 'Variantes expresivas, split actions y motion en estado puro.',
+            _HeroBlast(
+              title: l10n.buttonsPlaygroundTitle,
+              subtitle: l10n.buttonsPlaygroundSubtitle,
               icon: Icons.smart_button,
             ),
             const SizedBox(height: 16),
-            Text('ButtonM3E Variants', style: Theme.of(context).textTheme.headlineMedium),
+            Text(l10n.buttonsVariantsTitle, style: Theme.of(context).textTheme.headlineMedium),
             const SizedBox(height: 14),
             Wrap(
               spacing: 12,
               runSpacing: 12,
               children: [
                 ButtonM3E(
-                  label: const Text('Filled SM'),
+                  label: Text(l10n.buttonsFilledLabel),
                   style: ButtonM3EStyle.filled,
                   size: ButtonM3ESize.sm,
                   onPressed: () {},
                 ),
                 ButtonM3E(
-                  label: const Text('Tonal MD'),
+                  label: Text(l10n.buttonsTonalLabel),
                   style: ButtonM3EStyle.tonal,
                   size: ButtonM3ESize.md,
                   onPressed: () {},
                 ),
                 ButtonM3E(
-                  label: const Text('Outlined LG'),
+                  label: Text(l10n.buttonsOutlinedLabel),
                   style: ButtonM3EStyle.outlined,
                   size: ButtonM3ESize.lg,
                   onPressed: () {},
                 ),
                 ButtonM3E(
-                  label: const Text('Text'),
+                  label: Text(l10n.buttonsTextLabel),
                   style: ButtonM3EStyle.text,
                   onPressed: () {},
                 ),
                 ButtonM3E(
-                  label: const Text('Elevated'),
+                  label: Text(l10n.buttonsElevatedLabel),
                   style: ButtonM3EStyle.elevated,
                   onPressed: () {},
                 ),
               ],
             ),
             const SizedBox(height: 24),
-            Text('IconButtonM3E', style: Theme.of(context).textTheme.titleLarge),
+            Text(l10n.buttonsIconTitle, style: Theme.of(context).textTheme.titleLarge),
             const SizedBox(height: 12),
             Wrap(
               spacing: 12,
@@ -69,43 +70,43 @@ class _ButtonsScreen extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 24),
-            Text('SplitButtonM3E', style: Theme.of(context).textTheme.titleLarge),
+            Text(l10n.buttonsSplitTitle, style: Theme.of(context).textTheme.titleLarge),
             const SizedBox(height: 12),
             SplitButtonM3E<String>(
-              label: 'Guardar',
+              label: l10n.buttonsSplitSaveLabel,
               onPressed: () {},
-              items: const [
-                SplitButtonM3EItem<String>(value: 'save', child: Text('Guardar')),
-                SplitButtonM3EItem<String>(value: 'saveAs', child: Text('Guardar como')),
+              items: [
+                SplitButtonM3EItem<String>(value: 'save', child: Text(l10n.buttonsSplitSaveLabel)),
+                SplitButtonM3EItem<String>(value: 'saveAs', child: Text(l10n.buttonsSplitSaveAsLabel)),
               ],
               onSelected: (value) {},
             ),
             const SizedBox(height: 24),
-            Text('ButtonGroupM3E', style: Theme.of(context).textTheme.titleLarge),
+            Text(l10n.buttonsGroupTitle, style: Theme.of(context).textTheme.titleLarge),
             const SizedBox(height: 12),
             ButtonGroupM3E(
               selection: true,
               selectedIndex: 1,
               actions: [
-                ButtonGroupM3EAction(label: const Text('Dia'), onPressed: () {}),
-                ButtonGroupM3EAction(label: const Text('Semana'), onPressed: () {}),
-                ButtonGroupM3EAction(label: const Text('Mes'), onPressed: () {}),
+                ButtonGroupM3EAction(label: Text(l10n.buttonsGroupDayLabel), onPressed: () {}),
+                ButtonGroupM3EAction(label: Text(l10n.buttonsGroupWeekLabel), onPressed: () {}),
+                ButtonGroupM3EAction(label: Text(l10n.buttonsGroupMonthLabel), onPressed: () {}),
               ],
             ),
             const SizedBox(height: 24),
-            Text('ToolbarM3E', style: Theme.of(context).textTheme.titleLarge),
+            Text(l10n.buttonsToolbarTitle, style: Theme.of(context).textTheme.titleLarge),
             const SizedBox(height: 12),
             ToolbarM3E(
-              titleText: 'Editor Expresivo',
+              titleText: l10n.buttonsEditorTitle,
               actions: [
-                ToolbarActionM3E(icon: Icons.format_bold, onPressed: () {}, label: 'Negrita'),
-                ToolbarActionM3E(icon: Icons.format_italic, onPressed: () {}, label: 'Cursiva'),
-                ToolbarActionM3E(icon: Icons.format_underlined, onPressed: () {}, label: 'Subrayado'),
-                ToolbarActionM3E(icon: Icons.delete_outline, onPressed: () {}, label: 'Borrar', isDestructive: true),
+                ToolbarActionM3E(icon: Icons.format_bold, onPressed: () {}, label: l10n.buttonsToolbarBoldLabel),
+                ToolbarActionM3E(icon: Icons.format_italic, onPressed: () {}, label: l10n.buttonsToolbarItalicLabel),
+                ToolbarActionM3E(icon: Icons.format_underlined, onPressed: () {}, label: l10n.buttonsToolbarUnderlineLabel),
+                ToolbarActionM3E(icon: Icons.delete_outline, onPressed: () {}, label: l10n.buttonsToolbarDeleteLabel, isDestructive: true),
               ],
             ),
             const SizedBox(height: 24),
-            Text('m3e_buttons package', style: Theme.of(context).textTheme.titleLarge),
+            Text(l10n.buttonsM3ePackageTitle, style: Theme.of(context).textTheme.titleLarge),
             const SizedBox(height: 12),
             Wrap(
               spacing: 12,
@@ -114,29 +115,29 @@ class _ButtonsScreen extends StatelessWidget {
                 m3eb.M3EButton(
                   onPressed: () {},
                   style: m3eb.M3EButtonStyle.filled,
-                  child: const Text('M3E Filled'),
+                  child: Text(l10n.buttonsM3eFilledLabel),
                 ),
                 m3eb.M3EButton(
                   onPressed: () {},
                   style: m3eb.M3EButtonStyle.tonal,
-                  child: const Text('M3E Tonal'),
+                  child: Text(l10n.buttonsM3eTonalLabel),
                 ),
                 m3eb.M3EButton.icon(
                   onPressed: () {},
                   icon: const Icon(Icons.add),
-                  label: const Text('Icon Button'),
+                  label: Text(l10n.buttonsM3eIconLabel),
                   style: m3eb.M3EButtonStyle.outlined,
                 ),
               ],
             ),
             const SizedBox(height: 16),
             m3eb.M3ESplitButton<String>(
-              label: 'Split v2',
+              label: l10n.buttonsSplitV2Label,
               onPressed: () {},
               onSelected: (_) {},
-              items: const [
-                m3eb.M3ESplitButtonItem<String>(value: 'copy', child: Text('Copiar')),
-                m3eb.M3ESplitButtonItem<String>(value: 'move', child: Text('Mover')),
+              items: [
+                m3eb.M3ESplitButtonItem<String>(value: 'copy', child: Text(l10n.buttonsSplitCopyLabel)),
+                m3eb.M3ESplitButtonItem<String>(value: 'move', child: Text(l10n.buttonsSplitMoveLabel)),
               ],
             ),
           ],

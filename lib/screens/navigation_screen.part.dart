@@ -8,6 +8,7 @@ class _NavigationScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
       appBar: _buildAnimatedHeader(context, titleText: 'Navigation M3E', actions: [_appBarBrandIcon()]),
       body: Padding(
@@ -15,13 +16,13 @@ class _NavigationScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const _HeroBlast(
-              title: 'Navigation Experiments',
-              subtitle: 'Destinos, rail y comportamiento expresivo de layout.',
+            _HeroBlast(
+              title: l10n.navScreenTitle,
+              subtitle: l10n.navScreenSubtitle,
               icon: Icons.alt_route,
             ),
             const SizedBox(height: 16),
-            Text('NavigationBarM3E', style: Theme.of(context).textTheme.titleLarge),
+            Text(l10n.navBarTitle, style: Theme.of(context).textTheme.titleLarge),
             const SizedBox(height: 12),
             Container(
               padding: const EdgeInsets.all(12),
@@ -32,15 +33,15 @@ class _NavigationScreen extends StatelessWidget {
               child: NavigationBarM3E(
                 selectedIndex: 1,
                 onDestinationSelected: (_) {},
-                destinations: const [
-                  NavigationDestinationM3E(icon: Icon(Icons.home_outlined), selectedIcon: Icon(Icons.home), label: 'Home'),
-                  NavigationDestinationM3E(icon: Icon(Icons.search_outlined), selectedIcon: Icon(Icons.search), label: 'Search'),
-                  NavigationDestinationM3E(icon: Icon(Icons.person_outline), selectedIcon: Icon(Icons.person), label: 'Profile'),
+                destinations: [
+                  NavigationDestinationM3E(icon: const Icon(Icons.home_outlined), selectedIcon: const Icon(Icons.home), label: l10n.navHomeLabel),
+                  NavigationDestinationM3E(icon: const Icon(Icons.search_outlined), selectedIcon: const Icon(Icons.search), label: l10n.navSearchLabel),
+                  NavigationDestinationM3E(icon: const Icon(Icons.person_outline), selectedIcon: const Icon(Icons.person), label: l10n.navProfileLabel),
                 ],
               ),
             ),
             const SizedBox(height: 24),
-            Text('NavigationRailM3E', style: Theme.of(context).textTheme.titleLarge),
+            Text(l10n.navRailTitle, style: Theme.of(context).textTheme.titleLarge),
             const SizedBox(height: 12),
             Expanded(
               child: Container(
@@ -53,12 +54,12 @@ class _NavigationScreen extends StatelessWidget {
                     NavigationRailM3E(
                       selectedIndex: 0,
                       onDestinationSelected: (_) {},
-                      sections: const [
+                      sections: [
                         NavigationRailM3ESection(
                           destinations: [
-                            NavigationRailM3EDestination(icon: Icon(Icons.dashboard_outlined), selectedIcon: Icon(Icons.dashboard), label: 'Dashboard'),
-                            NavigationRailM3EDestination(icon: Icon(Icons.explore_outlined), selectedIcon: Icon(Icons.explore), label: 'Explore'),
-                            NavigationRailM3EDestination(icon: Icon(Icons.settings_outlined), selectedIcon: Icon(Icons.settings), label: 'Settings'),
+                            NavigationRailM3EDestination(icon: const Icon(Icons.dashboard_outlined), selectedIcon: const Icon(Icons.dashboard), label: l10n.navDashboardLabel),
+                            NavigationRailM3EDestination(icon: const Icon(Icons.explore_outlined), selectedIcon: const Icon(Icons.explore), label: l10n.navExploreLabel),
+                            NavigationRailM3EDestination(icon: const Icon(Icons.settings_outlined), selectedIcon: const Icon(Icons.settings), label: l10n.navSettingsLabel),
                           ],
                         ),
                       ],
@@ -66,7 +67,7 @@ class _NavigationScreen extends StatelessWidget {
                     Expanded(
                       child: Center(
                         child: Text(
-                          'Contenido de ejemplo',
+                          l10n.navExampleContent,
                           style: Theme.of(context).textTheme.bodyLarge,
                         ),
                       ),

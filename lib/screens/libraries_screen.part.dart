@@ -206,6 +206,7 @@ class _LibrariesScreen extends StatelessWidget {
   Widget _packageCard(
     BuildContext context, {
     required _LibraryDoc doc,
+    required AppLocalizations l10n,
   }) {
     final cs = Theme.of(context).colorScheme;
     return Card(
@@ -241,7 +242,7 @@ class _LibrariesScreen extends StatelessWidget {
               ),
               const SizedBox(height: 10),
               ButtonM3E(
-                label: const Text('Ver documentación avanzada'),
+                label: Text(l10n.librariesViewDocs),
                 style: ButtonM3EStyle.tonal,
                 onPressed: () => _openDoc(context, doc),
               ),
@@ -254,22 +255,23 @@ class _LibrariesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
-      appBar: _buildAnimatedHeader(context, titleText: 'Librerias y Funcionalidades', actions: [_appBarBrandIcon()]),
+      appBar: _buildAnimatedHeader(context, titleText: l10n.librariesTitle, actions: [_appBarBrandIcon()]),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          const _HeroBlast(
-            title: 'Librerias en uso',
-            subtitle: 'Referencia rapida de paquetes y funcionalidades de esta demo.',
+          _HeroBlast(
+            title: l10n.librariesIntroTitle,
+            subtitle: l10n.librariesIntroDesc,
             icon: Icons.menu_book,
           ),
           const SizedBox(height: 16),
-          Text('Stack de la mega galeria', style: Theme.of(context).textTheme.headlineMedium),
+          Text(l10n.librariesStackTitle, style: Theme.of(context).textTheme.headlineMedium),
           const SizedBox(height: 8),
-          Text('Documentación técnica navegable por librería con integración real, snippets y preview visual.'),
+          Text(l10n.librariesStackDesc),
           const SizedBox(height: 16),
-          ..._docs.map((doc) => _packageCard(context, doc: doc)),
+          ..._docs.map((doc) => _packageCard(context, doc: doc, l10n: l10n)),
           const SizedBox(height: 16),
           const _CreditsSection(),
           const SizedBox(height: 16),
@@ -280,13 +282,13 @@ class _LibrariesScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Lineamientos de interfaz M3 Expressive', style: Theme.of(context).textTheme.titleLarge),
+                  Text(l10n.librariesGuidelinesTitle, style: Theme.of(context).textTheme.titleLarge),
                   const SizedBox(height: 8),
-                  Text('1. Jerarquía visual fuerte con tipografía clara y bloques protagonistas.'),
-                  Text('2. Movimiento significativo: transición de entrada, feedback y estado.'),
-                  Text('3. Personalización visible: tema, tipografía y paleta accesibles.'),
-                  Text('4. Color como sistema: usa seed + superficies para cohesión.'),
-                  Text('5. Componentes expresivos sin sacrificar legibilidad y accesibilidad.'),
+                  Text(l10n.librariesGuideline1),
+                  Text(l10n.librariesGuideline2),
+                  Text(l10n.librariesGuideline3),
+                  Text(l10n.librariesGuideline4),
+                  Text(l10n.librariesGuideline5),
                 ],
               ),
             ),
@@ -303,9 +305,15 @@ class _CreditsSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
+    final l10n = AppLocalizations.of(context);
 
-    Future<void> openGithub() async {
+    Future<void> openGithubProfile() async {
       final uri = Uri.parse('https://github.com/icristian');
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    }
+
+    Future<void> openSourceRepo() async {
+      final uri = Uri.parse('https://github.com/iCristian/m3e_explosion');
       await launchUrl(uri, mode: LaunchMode.externalApplication);
     }
 
@@ -316,15 +324,15 @@ class _CreditsSection extends StatelessWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
+            cs.secondaryContainer.withValues(alpha: 0.95),
             cs.primaryContainer.withValues(alpha: 0.92),
             cs.tertiaryContainer.withValues(alpha: 0.9),
-            cs.secondaryContainer.withValues(alpha: 0.86),
           ],
         ),
         boxShadow: [
           BoxShadow(
-            color: cs.primary.withValues(alpha: 0.18),
-            blurRadius: 20,
+            color: cs.secondary.withValues(alpha: 0.18),
+            blurRadius: 24,
             offset: const Offset(0, 10),
           ),
         ],
@@ -336,17 +344,24 @@ class _CreditsSection extends StatelessWidget {
           children: [
             Row(
               children: [
-                m3shapes.M3EContainer.pill(
-                  width: 42,
-                  height: 42,
-                  color: cs.primary,
-                  child: Icon(Icons.workspace_premium_rounded, color: cs.onPrimary),
+                m3shapes.M3EContainer.gem(
+                  width: 44,
+                  height: 44,
+                  color: cs.secondary,
+                  child: Icon(Icons.workspace_premium_rounded, color: cs.onSecondary),
                 ),
                 const SizedBox(width: 10),
+                m3shapes.M3EContainer.flower(
+                  width: 36,
+                  height: 36,
+                  color: cs.tertiary,
+                  child: Icon(Icons.code_rounded, color: cs.onTertiary, size: 18),
+                ),
+                const SizedBox(width: 12),
                 Expanded(
                   child: Text(
-                    'Créditos',
-                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                    l10n.librariesCreditsTitle,
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                           fontWeight: FontWeight.w800,
                         ),
                   ),
@@ -354,27 +369,66 @@ class _CreditsSection extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 12),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                Chip(
+                  avatar: Icon(Icons.link_rounded, size: 16, color: cs.onSecondaryContainer),
+                  label: Text(l10n.librariesOpenSource),
+                  backgroundColor: cs.secondaryContainer.withValues(alpha: 0.85),
+                ),
+                Chip(
+                  avatar: Icon(Icons.palette_rounded, size: 16, color: cs.onPrimaryContainer),
+                  label: Text(l10n.m3Expressive),
+                  backgroundColor: cs.primaryContainer.withValues(alpha: 0.85),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
             Text(
-              'Autor: Cristian Carreño León',
+              l10n.librariesAuthor,
               style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700),
             ),
             const SizedBox(height: 4),
-            Text('Profesor de Matemática y Computación', style: Theme.of(context).textTheme.bodyLarge),
+            Text(l10n.librariesRole1, style: Theme.of(context).textTheme.bodyLarge),
             const SizedBox(height: 8),
-            Text('Mag. Comunicación educativa, Nvas. Tecnologías', style: Theme.of(context).textTheme.bodyMedium),
+            Text(l10n.librariesRole2, style: Theme.of(context).textTheme.bodyMedium),
             const SizedBox(height: 4),
-            Text('Dipl. Data Science', style: Theme.of(context).textTheme.bodyMedium),
+            Text(l10n.librariesRole3, style: Theme.of(context).textTheme.bodyMedium),
             const SizedBox(height: 14),
-            FilledButton.icon(
-              onPressed: openGithub,
-              icon: const Icon(Icons.open_in_new_rounded),
-              label: const Text('https://github.com/icristian'),
-              style: FilledButton.styleFrom(
-                backgroundColor: cs.primary,
-                foregroundColor: cs.onPrimary,
-                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-              ),
+            Row(
+              children: [
+                Expanded(
+                  child: ButtonM3E(
+                    label: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.open_in_new_rounded, size: 16),
+                        const SizedBox(width: 6),
+                        Text(l10n.librariesGithubBtn),
+                      ],
+                    ),
+                    style: ButtonM3EStyle.tonal,
+                    onPressed: openGithubProfile,
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: ButtonM3E(
+                    label: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.code_rounded, size: 16),
+                        const SizedBox(width: 6),
+                        Text(l10n.librariesSourceBtn),
+                      ],
+                    ),
+                    style: ButtonM3EStyle.filled,
+                    onPressed: openSourceRepo,
+                  ),
+                ),
+              ],
             ),
           ],
         ),

@@ -1,23 +1,32 @@
 # Material 3 Expressive Explosion
 
-Aplicacion Flutter de demostracion avanzada para Material 3 Expressive, con arquitectura MVVM + Service Locator, componentes reutilizables y enfoque de calidad para evolucionar el proyecto en equipo.
+Aplicación Flutter de demostración avanzada para Material 3 Expressive, con arquitectura MVVM + Service Locator, componentes reutilizables y enfoque de calidad para evolucionar el proyecto en equipo.
 
-## Estado Del Proyecto
+## 🎯 Estado Del Proyecto
 
-- Nombre de paquete: `m3e_explosion`
-- Plataforma: Android, iOS, Web
-- Arquitectura activa: MVVM + GetIt
-- Estado de calidad esperado:
+- **Nombre de paquete**: `m3e_explosion`
+- **Plataforma**: Android, iOS, Web
+- **Arquitectura activa**: MVVM + GetIt
+- **Soporte multiidioma**: EN, ES, DE, ZH
+- **Estado de calidad esperado**:
 	- `flutter analyze` sin errores
 	- `flutter test` pasando
 
-## Caracteristicas Clave
+## 📋 Cambios Recientes (v1.1.0)
 
-- UI Expressive con componentes M3E y `flutter_m3shapes_extended`
-- Navegacion principal adaptable a movil y escritorio
-- Personalizacion de tema, tipografia y paleta de color
-- Modulos de showcase (routines, focus, finance, health, agenda, automation)
-- Integracion de video con Vimeo via `webview_flutter` y fallback externo
+- ✨ **Navegación Mejorada**: Unificada a usar `_CompactBottomNav` colorida y animada en todas las resoluciones. Ahora en pantallas grandes se muestra con etiquetas completas mientras que en móvil se usan etiquetas cortas.
+- 🎨 **Diseño M3E en Secciones Clave**: Rediseño de "Créditos y Código Fuente" con gradientes, formas geométricas y botones M3E en `showcase_screen.part.dart` y `libraries_screen.part.dart`.
+- 🐛 **Fixes en Shapes**: Corrección de parámetros requeridos en `M3EContainer` para `softBurst`, `flower` y `boom`.
+- 🌍 **Auditoría de i18n**: Identificación de textos hardcodeados en español para migración a multiidioma completo (EN, ES, DE, ZH).
+
+## ✨ Características Clave
+
+- 🎨 **UI Expressive** con componentes M3E y `flutter_m3shapes_extended` — formas geométricas audaces
+- 📱 **Navegación Adaptable** con `_CompactBottomNav` colorida (móvil y escritorio)
+- 🎭 **Personalización de Tema** — color, tipografía, paleta y modo claro/oscuro en vivo
+- 🌍 **Multiidioma** — Soporta EN, ES, DE, ZH con fallback automático
+- 📦 **Modulos Showcase** — Routines, Focus, Finance, Health, Agenda, Automation
+- 🎥 **Integración de Video** — Vimeo embebido con webview + fallback externo
 
 ## Arquitectura Tecnica
 
@@ -189,6 +198,41 @@ git grep -i "password\|secret\|api[_.-]*key\|token" -- "*.dart" "*.gradle" "*.xm
 3. Registrar en `setupServiceLocator()`.
 4. Consumir desde ViewModels, no directo en UI.
 
+## 🌍 Localización (i18n)
+
+El proyecto soporta **inglés (EN), español (ES), alemán (DE) y chino simplificado (ZH)** usando un sistema map-based en `lib/l10n/app_localizations.dart`.
+
+### Agregar Un Nuevo String Localizado
+
+1. **Abre** `lib/l10n/app_localizations.dart` y localiza la estructura `_strings`
+2. **Agrega clave** en inglés primero:
+   ```dart
+   'my_new_key': 'English text',
+   ```
+3. **Replica en otros idiomas**:
+   ```dart
+   'es': {'my_new_key': 'Texto en español'},
+   'de': {'my_new_key': 'Deutscher Text'},
+   'zh': {'my_new_key': '中文文本'},
+   ```
+4. **Usa en UI**:
+   ```dart
+   final l10n = AppLocalizations.of(context);
+   Text(l10n.myNewKey)  // Automáticamente toma valor según locale
+   ```
+
+### Convención De Nombres De Claves
+
+- `nav_*` — Etiquetas de navegación
+- `studio_*` — Configuración del Studio M3E
+- `shapes_*` — Pantalla de shapes
+- `showcase_*` — Pantalla de showcase
+- `video_*` — Controles de video
+
+### Fallback De Idioma
+
+Si el dispositivo tiene locale no soportado, automáticamente cae a **inglés (EN)**.
+
 ## Troubleshooting
 
 ### Error De Build Android
@@ -215,13 +259,36 @@ flutter run
 - Probar boton de abrir externo (fallback Vimeo).
 - Validar restricciones del dispositivo/navegador.
 
-## Contribucion
+## 📜 Licencia
 
-1. Crear branch de feature.
-2. Mantener cambios acotados por modulo.
-3. Ejecutar `flutter analyze` y `flutter test` antes de PR.
-4. Documentar decisiones tecnicas en el PR.
+Este proyecto está licenciado bajo la **Licencia MIT**.
 
-## Licencia
+### Términos Principales
 
-Este proyecto usa licencia MIT.
+- ✅ **Permitido**: Uso comercial, copia, distribución, modificación
+- ⚠️ **Condición**: Incluir aviso de licencia y copyright en distribuciones
+- ❌ **No permitido**: Responsabilidad del autor ni garantía de uso
+
+Para más detalles, consulta el archivo `LICENSE` en la raíz del repositorio o visita [opensource.org/licenses/MIT](https://opensource.org/licenses/MIT).
+
+## 👤 Créditos
+
+**Proyecto Creado por**: [iCristian](https://github.com/iCristian)
+
+### Contribuidores y Inspiración
+
+- **Material 3 Expressive**: Conjunto de paquetes M3E (`m3e_collection`, `m3e_core`, `m3e_buttons`, `flutter_m3shapes_extended`)
+- **Flutter & Dart**: Google y comunidad de Flutter
+- **Inspiración de Diseño**: Material Design 3 guidelines
+
+### Cómo Contribuir
+
+Si deseas contribuir al proyecto:
+
+1. Fork el repositorio desde [iCristian/m3e_explosion](https://github.com/iCristian/m3e_explosion)
+2. Crea una rama para tu feature (`git checkout -b feature/mi-feature`)
+3. Haz commit de tus cambios (`git commit -am 'Agrega mi feature'`)
+4. Push a la rama (`git push origin feature/mi-feature`)
+5. Abre un Pull Request con descripción clara
+
+Por favor mantén cambios acotados por módulo y ejecuta `flutter analyze` + `flutter test` antes de PR.

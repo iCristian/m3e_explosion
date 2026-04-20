@@ -45,12 +45,18 @@ class _RoutinesModulePanel extends StatefulWidget {
 
 class _RoutinesModulePanelState extends State<_RoutinesModulePanel> {
   final Set<int> _done = {1};
-  final List<String> _habits = const ['Leer 20 min', 'Estirar 10 min', 'Planificar top 3', 'Inbox cero'];
+
+  late List<String> _habits;
 
   @override
   void initState() {
     super.initState();
     _loadState();
+  }
+
+  void _initializeHabits() {
+    final l10n = AppLocalizations.of(context);
+    _habits = [l10n.routinesHabitsList1, l10n.routinesHabitsList2, l10n.routinesHabitsList3, l10n.routinesHabitsList4];
   }
 
   Future<void> _loadState() async {
@@ -73,6 +79,8 @@ class _RoutinesModulePanelState extends State<_RoutinesModulePanel> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    _initializeHabits();
     final completed = _done.length / _habits.length;
     return Card(
       child: Padding(
@@ -80,11 +88,11 @@ class _RoutinesModulePanelState extends State<_RoutinesModulePanel> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Streak semanal', style: Theme.of(context).textTheme.titleLarge),
+            Text(l10n.routinesStreakTitle, style: Theme.of(context).textTheme.titleLarge),
             const SizedBox(height: 8),
             LinearProgressIndicatorM3E(value: completed),
             const SizedBox(height: 10),
-            Text('${_done.length}/${_habits.length} hábitos completados', style: Theme.of(context).textTheme.bodyMedium),
+            Text('${_done.length}/${_habits.length} ${l10n.routinesHabitsCompleted}', style: Theme.of(context).textTheme.bodyMedium),
             const SizedBox(height: 12),
             ...List.generate(_habits.length, (index) {
               final done = _done.contains(index);
