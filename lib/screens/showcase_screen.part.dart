@@ -653,8 +653,26 @@ class _ShowcaseScreenState extends State<_ShowcaseScreen> {
           ).animate().fadeIn(delay: 300.ms).slideX(begin: 0.08, end: 0),
           const SizedBox(height: 16),
           // ── GitHub Credits ──────────────────────────────────────────
-          Card(
-            color: cs.secondaryContainer.withValues(alpha: 0.45),
+          Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(28),
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  cs.secondaryContainer.withValues(alpha: 0.95),
+                  cs.primaryContainer.withValues(alpha: 0.92),
+                  cs.tertiaryContainer.withValues(alpha: 0.9),
+                ],
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: cs.secondary.withValues(alpha: 0.18),
+                  blurRadius: 24,
+                  offset: const Offset(0, 10),
+                ),
+              ],
+            ),
             child: Padding(
               padding: const EdgeInsets.all(20),
               child: Column(
@@ -663,43 +681,84 @@ class _ShowcaseScreenState extends State<_ShowcaseScreen> {
                   Row(
                     children: [
                       m3shapes.M3EContainer.gem(
-                        width: 42, height: 42, color: cs.secondary,
-                        child: Icon(Icons.code_rounded, color: cs.onSecondary, size: 22)),
+                        width: 44,
+                        height: 44,
+                        color: cs.secondary,
+                        child: Icon(Icons.code_rounded, color: cs.onSecondary, size: 22),
+                      ),
+                      const SizedBox(width: 10),
+                      m3shapes.M3EContainer.flower(
+                        width: 36,
+                        height: 36,
+                        color: cs.tertiary,
+                        child: Icon(Icons.auto_awesome, color: cs.onTertiary, size: 18),
+                      ),
                       const SizedBox(width: 12),
                       Expanded(
-                        child: Text(l10n.showcaseCredits,
-                          style: Theme.of(context).textTheme.titleMedium),
+                        child: Text(
+                          l10n.showcaseCredits,
+                          style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                                fontWeight: FontWeight.w800,
+                              ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: [
+                      Chip(
+                        avatar: Icon(Icons.link_rounded, size: 16, color: cs.onSecondaryContainer),
+                        label: const Text('Open source'),
+                        backgroundColor: cs.secondaryContainer.withValues(alpha: 0.85),
+                      ),
+                      Chip(
+                        avatar: Icon(Icons.palette_rounded, size: 16, color: cs.onPrimaryContainer),
+                        label: const Text('M3 Expressive'),
+                        backgroundColor: cs.primaryContainer.withValues(alpha: 0.85),
                       ),
                     ],
                   ),
                   const SizedBox(height: 10),
-                  Text(l10n.showcaseGithubTitle,
-                    style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w700)),
+                  Text(
+                    l10n.showcaseGithubTitle,
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
+                  ),
                   const SizedBox(height: 6),
-                  Text(l10n.showcaseGithubDesc,
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: cs.onSurfaceVariant)),
+                  Text(
+                    l10n.showcaseGithubDesc,
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: cs.onSurfaceVariant),
+                  ),
                   const SizedBox(height: 14),
-                  ButtonM3E(
-                    label: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Icon(Icons.open_in_new, size: 16),
-                        const SizedBox(width: 6),
-                        Text(l10n.showcaseGithubBtn),
-                      ],
-                    ),
-                    style: ButtonM3EStyle.tonal,
-                    onPressed: () async {
-                      final uri = Uri.parse('https://github.com/iCristian/m3e_explosion');
-                      if (await canLaunchUrl(uri)) {
-                        await launchUrl(uri, mode: LaunchMode.externalApplication);
-                      }
-                    },
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ButtonM3E(
+                          label: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Icon(Icons.open_in_new, size: 16),
+                              const SizedBox(width: 6),
+                              Text(l10n.showcaseGithubBtn),
+                            ],
+                          ),
+                          style: ButtonM3EStyle.filled,
+                          onPressed: () async {
+                            final uri = Uri.parse('https://github.com/iCristian/m3e_explosion');
+                            if (await canLaunchUrl(uri)) {
+                              await launchUrl(uri, mode: LaunchMode.externalApplication);
+                            }
+                          },
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
             ),
-          ).animate().fadeIn(delay: 360.ms),
+          ).animate().fadeIn(delay: 360.ms).slideY(begin: 0.08, end: 0),
         ],
       ),
     );

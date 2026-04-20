@@ -304,8 +304,13 @@ class _CreditsSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
 
-    Future<void> openGithub() async {
+    Future<void> openGithubProfile() async {
       final uri = Uri.parse('https://github.com/icristian');
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    }
+
+    Future<void> openSourceRepo() async {
+      final uri = Uri.parse('https://github.com/iCristian/m3e_explosion');
       await launchUrl(uri, mode: LaunchMode.externalApplication);
     }
 
@@ -316,15 +321,15 @@ class _CreditsSection extends StatelessWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
+            cs.secondaryContainer.withValues(alpha: 0.95),
             cs.primaryContainer.withValues(alpha: 0.92),
             cs.tertiaryContainer.withValues(alpha: 0.9),
-            cs.secondaryContainer.withValues(alpha: 0.86),
           ],
         ),
         boxShadow: [
           BoxShadow(
-            color: cs.primary.withValues(alpha: 0.18),
-            blurRadius: 20,
+            color: cs.secondary.withValues(alpha: 0.18),
+            blurRadius: 24,
             offset: const Offset(0, 10),
           ),
         ],
@@ -336,20 +341,44 @@ class _CreditsSection extends StatelessWidget {
           children: [
             Row(
               children: [
-                m3shapes.M3EContainer.pill(
-                  width: 42,
-                  height: 42,
-                  color: cs.primary,
-                  child: Icon(Icons.workspace_premium_rounded, color: cs.onPrimary),
+                m3shapes.M3EContainer.gem(
+                  width: 44,
+                  height: 44,
+                  color: cs.secondary,
+                  child: Icon(Icons.workspace_premium_rounded, color: cs.onSecondary),
                 ),
                 const SizedBox(width: 10),
+                m3shapes.M3EContainer.flower(
+                  width: 36,
+                  height: 36,
+                  color: cs.tertiary,
+                  child: Icon(Icons.code_rounded, color: cs.onTertiary, size: 18),
+                ),
+                const SizedBox(width: 12),
                 Expanded(
                   child: Text(
-                    'Créditos',
-                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                    'Créditos y código fuente',
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                           fontWeight: FontWeight.w800,
                         ),
                   ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                Chip(
+                  avatar: Icon(Icons.link_rounded, size: 16, color: cs.onSecondaryContainer),
+                  label: const Text('Open source'),
+                  backgroundColor: cs.secondaryContainer.withValues(alpha: 0.85),
+                ),
+                Chip(
+                  avatar: Icon(Icons.palette_rounded, size: 16, color: cs.onPrimaryContainer),
+                  label: const Text('M3 Expressive'),
+                  backgroundColor: cs.primaryContainer.withValues(alpha: 0.85),
                 ),
               ],
             ),
@@ -365,16 +394,38 @@ class _CreditsSection extends StatelessWidget {
             const SizedBox(height: 4),
             Text('Dipl. Data Science', style: Theme.of(context).textTheme.bodyMedium),
             const SizedBox(height: 14),
-            FilledButton.icon(
-              onPressed: openGithub,
-              icon: const Icon(Icons.open_in_new_rounded),
-              label: const Text('https://github.com/icristian'),
-              style: FilledButton.styleFrom(
-                backgroundColor: cs.primary,
-                foregroundColor: cs.onPrimary,
-                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-              ),
+            Row(
+              children: [
+                Expanded(
+                  child: ButtonM3E(
+                    label: const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.open_in_new_rounded, size: 16),
+                        SizedBox(width: 6),
+                        Text('Perfil GitHub'),
+                      ],
+                    ),
+                    style: ButtonM3EStyle.tonal,
+                    onPressed: openGithubProfile,
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: ButtonM3E(
+                    label: const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.code_rounded, size: 16),
+                        SizedBox(width: 6),
+                        Text('Código fuente'),
+                      ],
+                    ),
+                    style: ButtonM3EStyle.filled,
+                    onPressed: openSourceRepo,
+                  ),
+                ),
+              ],
             ),
           ],
         ),

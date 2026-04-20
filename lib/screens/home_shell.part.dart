@@ -231,8 +231,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final compactLayout = MediaQuery.sizeOf(context).width < 780;
-    final cs = Theme.of(context).colorScheme;
-    final l10n = AppLocalizations.of(context);
     final navItems = _buildNavItems(l10n);
 
     return Scaffold(
@@ -249,40 +247,12 @@ class _HomeScreenState extends State<HomeScreen> {
         child: _AnimatedPaletteGradientBand(
           borderRadius: BorderRadius.circular(28),
           showShadow: true,
-          child: compactLayout
-              ? _CompactBottomNav(
-                  selectedIndex: _currentIndex,
-                  items: navItems,
-                  onTap: (index) => setState(() => _currentIndex = index),
-                )
-              : Theme(
-                  data: Theme.of(context).copyWith(
-                    navigationBarTheme: NavigationBarThemeData(
-                      height: 72,
-                      backgroundColor: Colors.transparent,
-                      indicatorColor: cs.onPrimary.withValues(alpha: 0.2),
-                      labelTextStyle: WidgetStateProperty.all(
-                        Theme.of(context).textTheme.labelMedium?.copyWith(
-                              color: cs.onPrimary,
-                              fontWeight: FontWeight.w700,
-                            ),
-                      ),
-                    ),
-                  ),
-                  child: NavigationBarM3E(
-                    selectedIndex: _currentIndex,
-                    onDestinationSelected: (index) => setState(() => _currentIndex = index),
-                    destinations: navItems
-                        .map(
-                          (item) => NavigationDestinationM3E(
-                            icon: Icon(item.icon),
-                            selectedIcon: Icon(item.selectedIcon),
-                            label: item.label,
-                          ),
-                        )
-                        .toList(),
-                  ),
-                ),
+          child: _CompactBottomNav(
+              selectedIndex: _currentIndex,
+              items: navItems,
+              useFullLabel: !compactLayout,
+              onTap: (index) => setState(() => _currentIndex = index),
+            ),
         ),
       ),
     );
@@ -308,11 +278,13 @@ class _CompactBottomNav extends StatefulWidget {
     required this.selectedIndex,
     required this.items,
     required this.onTap,
+    this.useFullLabel = false,
   });
 
   final int selectedIndex;
   final List<_NavItem> items;
   final ValueChanged<int> onTap;
+  final bool useFullLabel;
 
   @override
   State<_CompactBottomNav> createState() => _CompactBottomNavState();
@@ -411,7 +383,7 @@ class _CompactBottomNavState extends State<_CompactBottomNav> {
                         ),
                         const SizedBox(width: 6),
                         Text(
-                          item.shortLabel,
+                          widget.useFullLabel ? item.label : item.shortLabel,
                           style: Theme.of(context).textTheme.labelMedium?.copyWith(
                                 color: cs.onPrimary,
                                 fontWeight: selected ? FontWeight.w800 : FontWeight.w600,
