@@ -62,6 +62,7 @@ class _ShowcaseScreenState extends State<_ShowcaseScreen> {
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
+    final l10n = AppLocalizations.of(context);
     final isCompact = MediaQuery.sizeOf(context).width < 420;
     final query = _query.trim().toLowerCase();
     final filteredModules = query.isEmpty
@@ -650,6 +651,55 @@ class _ShowcaseScreenState extends State<_ShowcaseScreen> {
               ),
             ),
           ).animate().fadeIn(delay: 300.ms).slideX(begin: 0.08, end: 0),
+          const SizedBox(height: 16),
+          // ── GitHub Credits ──────────────────────────────────────────
+          Card(
+            color: cs.secondaryContainer.withValues(alpha: 0.45),
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      m3shapes.M3EContainer.gem(
+                        width: 42, height: 42, color: cs.secondary,
+                        child: Icon(Icons.code_rounded, color: cs.onSecondary, size: 22)),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Text(l10n.showcaseCredits,
+                          style: Theme.of(context).textTheme.titleMedium),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  Text(l10n.showcaseGithubTitle,
+                    style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w700)),
+                  const SizedBox(height: 6),
+                  Text(l10n.showcaseGithubDesc,
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: cs.onSurfaceVariant)),
+                  const SizedBox(height: 14),
+                  ButtonM3E(
+                    label: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(Icons.open_in_new, size: 16),
+                        const SizedBox(width: 6),
+                        Text(l10n.showcaseGithubBtn),
+                      ],
+                    ),
+                    style: ButtonM3EStyle.tonal,
+                    onPressed: () async {
+                      final uri = Uri.parse('https://github.com/iCristian/m3e_explosion');
+                      if (await canLaunchUrl(uri)) {
+                        await launchUrl(uri, mode: LaunchMode.externalApplication);
+                      }
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ).animate().fadeIn(delay: 360.ms),
         ],
       ),
     );

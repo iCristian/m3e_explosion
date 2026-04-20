@@ -13,6 +13,8 @@ import 'package:m3e_core/m3e_core.dart' as m3ec;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'l10n/app_localizations.dart';
 
 // ARQUITECTURA: Models, Services, ViewModels, Widgets
 import 'models/app_models.dart';
@@ -215,6 +217,7 @@ class _M3EDemoAppState extends State<M3EDemoApp> {
   ThemeMode _themeMode = ThemeMode.system;
   DemoFontPack _fontPack = DemoFontPack.inter;
   DemoColorPack _colorPack = DemoColorPack.ultraViolet;
+  Locale _locale = const Locale('en');
 
   @override
   void initState() {
@@ -242,6 +245,17 @@ class _M3EDemoAppState extends State<M3EDemoApp> {
 
       // Cargar pack de colores (por defecto: Ultra Violet)
       _colorPack = prefs.getColorPack();
+
+      // Cargar idioma: guardado o auto-detectado del sistema
+      final savedLocale = prefs.getLocale();
+      if (savedLocale != null) {
+        _locale = Locale(savedLocale);
+      } else {
+        final systemLang =
+            WidgetsBinding.instance.platformDispatcher.locale.languageCode;
+        const supported = ['en', 'es', 'de', 'zh'];
+        _locale = Locale(supported.contains(systemLang) ? systemLang : 'en');
+      }
     });
   }
 
@@ -278,6 +292,12 @@ class _M3EDemoAppState extends State<M3EDemoApp> {
   Future<void> _setColorPack(DemoColorPack pack) async {
     setState(() => _colorPack = pack);
     await preferencesService.setColorPack(pack);
+  }
+
+  /// Guarda el idioma seleccionado en preferencias.
+  Future<void> _setLocale(String languageCode) async {
+    setState(() => _locale = Locale(languageCode));
+    await preferencesService.setLocale(languageCode);
   }
 
   TextStyle _fontStyle(
@@ -333,6 +353,14 @@ class _M3EDemoAppState extends State<M3EDemoApp> {
           themeMode: _themeMode,
           theme: _buildTheme(light, _fontPack),
           darkTheme: _buildTheme(dark, _fontPack),
+          locale: _locale,
+          localizationsDelegates: const [
+            AppLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          supportedLocales: AppLocalizations.supportedLocales,
           home: widget.enableIntro
               ? IntroGate(
                   child: HomeScreen(
@@ -342,6 +370,8 @@ class _M3EDemoAppState extends State<M3EDemoApp> {
                     onFontPackChanged: (pack) => _setFontPack(pack),
                     colorPack: _colorPack,
                     onColorPackChanged: (pack) => _setColorPack(pack),
+                    locale: _locale,
+                    onLocaleChanged: (lc) => _setLocale(lc),
                   ),
                 )
               : HomeScreen(
@@ -351,6 +381,8 @@ class _M3EDemoAppState extends State<M3EDemoApp> {
                   onFontPackChanged: (pack) => _setFontPack(pack),
                   colorPack: _colorPack,
                   onColorPackChanged: (pack) => _setColorPack(pack),
+                  locale: _locale,
+                  onLocaleChanged: (lc) => _setLocale(lc),
                 ),
         );
       },

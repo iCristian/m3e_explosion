@@ -11,6 +11,8 @@ class HomeScreen extends StatefulWidget {
     required this.onFontPackChanged,
     required this.colorPack,
     required this.onColorPackChanged,
+    required this.locale,
+    required this.onLocaleChanged,
   });
 
   final ThemeMode themeMode;
@@ -19,6 +21,8 @@ class HomeScreen extends StatefulWidget {
   final ValueChanged<DemoFontPack> onFontPackChanged;
   final DemoColorPack colorPack;
   final ValueChanged<DemoColorPack> onColorPackChanged;
+  final Locale locale;
+  final ValueChanged<String> onLocaleChanged;
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -38,22 +42,24 @@ class _HomeScreenState extends State<HomeScreen> {
     const _LibrariesScreen(),
   ];
 
-  static const List<_NavItem> _navItems = [
-    _NavItem(icon: Icons.grid_view_rounded, selectedIcon: Icons.grid_view, label: 'Showcase', shortLabel: 'Inicio'),
-    _NavItem(icon: Icons.smart_button_outlined, selectedIcon: Icons.smart_button, label: 'Buttons', shortLabel: 'Botones'),
-    _NavItem(icon: Icons.alt_route_outlined, selectedIcon: Icons.alt_route, label: 'Navigation', shortLabel: 'Nav'),
-    _NavItem(icon: Icons.animation_outlined, selectedIcon: Icons.animation, label: 'Motion', shortLabel: 'Motion'),
-    _NavItem(icon: Icons.refresh_outlined, selectedIcon: Icons.refresh, label: 'Refresh', shortLabel: 'Refresh'),
-    _NavItem(icon: Icons.widgets_outlined, selectedIcon: Icons.widgets, label: 'Core', shortLabel: 'Core'),
-    _NavItem(icon: Icons.category_outlined, selectedIcon: Icons.category, label: 'Shapes', shortLabel: 'Shapes'),
-    _NavItem(icon: Icons.menu_book_outlined, selectedIcon: Icons.menu_book, label: 'Librerias', shortLabel: 'Libs'),
+  List<_NavItem> _buildNavItems(AppLocalizations l10n) => [
+    _NavItem(icon: Icons.grid_view_rounded, selectedIcon: Icons.grid_view, label: l10n.navShowcase, shortLabel: l10n.navShowcaseShort),
+    _NavItem(icon: Icons.smart_button_outlined, selectedIcon: Icons.smart_button, label: l10n.navButtons, shortLabel: l10n.navButtonsShort),
+    _NavItem(icon: Icons.alt_route_outlined, selectedIcon: Icons.alt_route, label: l10n.navNavigation, shortLabel: l10n.navNavigationShort),
+    _NavItem(icon: Icons.animation_outlined, selectedIcon: Icons.animation, label: l10n.navMotion, shortLabel: l10n.navMotionShort),
+    _NavItem(icon: Icons.refresh_outlined, selectedIcon: Icons.refresh, label: l10n.navRefresh, shortLabel: l10n.navRefreshShort),
+    _NavItem(icon: Icons.widgets_outlined, selectedIcon: Icons.widgets, label: l10n.navCore, shortLabel: l10n.navCoreShort),
+    _NavItem(icon: Icons.category_outlined, selectedIcon: Icons.category, label: l10n.navShapes, shortLabel: l10n.navShapesShort),
+    _NavItem(icon: Icons.menu_book_outlined, selectedIcon: Icons.menu_book, label: l10n.navLibraries, shortLabel: l10n.navLibrariesShort),
   ];
 
   Future<void> _openStudioManager(BuildContext context) async {
     final cs = Theme.of(context).colorScheme;
+    final l10n = AppLocalizations.of(context);
     var selectedThemeMode = widget.themeMode;
     var selectedFontPack = widget.fontPack;
     var selectedColorPack = widget.colorPack;
+    var selectedLocale = widget.locale;
 
     await showModalBottomSheet<void>(
       context: context,
@@ -76,9 +82,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Studio M3E', style: Theme.of(context).textTheme.titleLarge),
+                      Text(l10n.studioTitle, style: Theme.of(context).textTheme.titleLarge),
                       const SizedBox(height: 10),
-                      Text('Modo de color', style: Theme.of(context).textTheme.labelLarge),
+                      Text(l10n.studioColorMode, style: Theme.of(context).textTheme.labelLarge),
                       const SizedBox(height: 8),
                       Wrap(
                         spacing: 8,
@@ -87,7 +93,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ChoiceChip(
                             selected: selectedThemeMode == ThemeMode.light,
                             avatar: const Icon(Icons.light_mode),
-                            label: const Text('Claro'),
+                            label: Text(l10n.studioLight),
                             onSelected: (_) {
                               selectedThemeMode = ThemeMode.light;
                               widget.onThemeModeChanged(ThemeMode.light);
@@ -97,7 +103,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ChoiceChip(
                             selected: selectedThemeMode == ThemeMode.dark,
                             avatar: const Icon(Icons.dark_mode),
-                            label: const Text('Oscuro'),
+                            label: Text(l10n.studioDark),
                             onSelected: (_) {
                               selectedThemeMode = ThemeMode.dark;
                               widget.onThemeModeChanged(ThemeMode.dark);
@@ -107,7 +113,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ChoiceChip(
                             selected: selectedThemeMode == ThemeMode.system,
                             avatar: const Icon(Icons.auto_mode),
-                            label: const Text('Sistema'),
+                            label: Text(l10n.studioSystem),
                             onSelected: (_) {
                               selectedThemeMode = ThemeMode.system;
                               widget.onThemeModeChanged(ThemeMode.system);
@@ -117,7 +123,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ],
                       ),
                       const SizedBox(height: 16),
-                      Text('Tipografia activa', style: Theme.of(context).textTheme.labelLarge),
+                      Text(l10n.studioTypography, style: Theme.of(context).textTheme.labelLarge),
                       const SizedBox(height: 8),
                       Wrap(
                         spacing: 8,
@@ -136,7 +142,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         }).toList(),
                       ),
                       const SizedBox(height: 16),
-                      Text('Paleta colorida', style: Theme.of(context).textTheme.labelLarge),
+                      Text(l10n.studioPalette, style: Theme.of(context).textTheme.labelLarge),
                       const SizedBox(height: 8),
                       Wrap(
                         spacing: 8,
@@ -157,7 +163,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       const SizedBox(height: 10),
                       ButtonM3E(
-                        label: const Text('Color sorpresa'),
+                        label: Text(l10n.studioSurprise),
                         style: ButtonM3EStyle.tonal,
                         onPressed: () {
                           final index = (DemoColorPack.values.indexOf(selectedColorPack) + 1) % DemoColorPack.values.length;
@@ -165,6 +171,51 @@ class _HomeScreenState extends State<HomeScreen> {
                           widget.onColorPackChanged(selectedColorPack);
                           setModalState(() {});
                         },
+                      ),
+                      const SizedBox(height: 16),
+                      Text(l10n.studioLanguage, style: Theme.of(context).textTheme.labelLarge),
+                      const SizedBox(height: 8),
+                      Wrap(
+                        spacing: 8,
+                        runSpacing: 8,
+                        children: [
+                          ChoiceChip(
+                            selected: selectedLocale.languageCode == 'en',
+                            label: const Text('🇬🇧 English'),
+                            onSelected: (_) {
+                              selectedLocale = const Locale('en');
+                              widget.onLocaleChanged('en');
+                              setModalState(() {});
+                            },
+                          ),
+                          ChoiceChip(
+                            selected: selectedLocale.languageCode == 'es',
+                            label: const Text('🇪🇸 Español'),
+                            onSelected: (_) {
+                              selectedLocale = const Locale('es');
+                              widget.onLocaleChanged('es');
+                              setModalState(() {});
+                            },
+                          ),
+                          ChoiceChip(
+                            selected: selectedLocale.languageCode == 'de',
+                            label: const Text('🇩🇪 Deutsch'),
+                            onSelected: (_) {
+                              selectedLocale = const Locale('de');
+                              widget.onLocaleChanged('de');
+                              setModalState(() {});
+                            },
+                          ),
+                          ChoiceChip(
+                            selected: selectedLocale.languageCode == 'zh',
+                            label: const Text('🇨🇳 中文'),
+                            onSelected: (_) {
+                              selectedLocale = const Locale('zh');
+                              widget.onLocaleChanged('zh');
+                              setModalState(() {});
+                            },
+                          ),
+                        ],
                       ),
                     ],
                   ),
@@ -181,6 +232,8 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final compactLayout = MediaQuery.sizeOf(context).width < 780;
     final cs = Theme.of(context).colorScheme;
+    final l10n = AppLocalizations.of(context);
+    final navItems = _buildNavItems(l10n);
 
     return Scaffold(
       body: _screens[_currentIndex],
@@ -199,7 +252,7 @@ class _HomeScreenState extends State<HomeScreen> {
           child: compactLayout
               ? _CompactBottomNav(
                   selectedIndex: _currentIndex,
-                  items: _navItems,
+                  items: navItems,
                   onTap: (index) => setState(() => _currentIndex = index),
                 )
               : Theme(
@@ -219,7 +272,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: NavigationBarM3E(
                     selectedIndex: _currentIndex,
                     onDestinationSelected: (index) => setState(() => _currentIndex = index),
-                    destinations: _navItems
+                    destinations: navItems
                         .map(
                           (item) => NavigationDestinationM3E(
                             icon: Icon(item.icon),

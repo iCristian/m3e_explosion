@@ -202,6 +202,19 @@ class AppPreferencesService {
     return _prefs.setBool(PrefKeys.autoBudget, enabled);
   }
 
+  // IDIOMA
+
+  /// Obtiene el código de idioma guardado ('en', 'es', 'de', 'zh').
+  /// Retorna null si no hay valor guardado (auto-detectar).
+  String? getLocale() {
+    return _prefs.getString(PrefKeys.locale);
+  }
+
+  /// Guarda el código de idioma seleccionado.
+  Future<void> setLocale(String languageCode) {
+    return _prefs.setString(PrefKeys.locale, languageCode);
+  }
+
   /// Limpia todas las preferencias.
   Future<void> clearAll() {
     return _prefs.clear();

@@ -161,4 +161,7 @@ abstract class PrefKeys {
 
   /// Clave para automatización de presupuesto
   static const String autoBudget = 'module.auto.budget';
+
+  /// Clave para idioma de la interfaz ('en', 'es', 'de', 'zh')
+  static const String locale = 'settings.locale';
 }
