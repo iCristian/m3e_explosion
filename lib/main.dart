@@ -11,6 +11,7 @@ import 'package:m3e_buttons/m3e_buttons.dart' as m3eb;
 import 'package:m3e_collection/m3e_collection.dart';
 import 'package:m3e_core/m3e_core.dart' as m3ec;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 // ARQUITECTURA: Models, Services, ViewModels, Widgets
@@ -3107,6 +3108,7 @@ class _LibrariesScreen extends StatelessWidget {
           const SizedBox(height: 16),
           ..._docs.map((doc) => _packageCard(context, doc: doc)),
           const SizedBox(height: 16),
+          const _CreditsSection(),
           const SizedBox(height: 16),
           Card(
             color: Theme.of(context).colorScheme.primaryContainer.withValues(alpha: 0.45),
@@ -3129,6 +3131,95 @@ class _LibrariesScreen extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+class _CreditsSection extends StatelessWidget {
+  const _CreditsSection();
+
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+
+    Future<void> openGithub() async {
+      final uri = Uri.parse('https://github.com/icristian');
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    }
+
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(28),
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            cs.primaryContainer.withValues(alpha: 0.92),
+            cs.tertiaryContainer.withValues(alpha: 0.9),
+            cs.secondaryContainer.withValues(alpha: 0.86),
+          ],
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: cs.primary.withValues(alpha: 0.18),
+            blurRadius: 20,
+            offset: const Offset(0, 10),
+          ),
+        ],
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(18),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                m3shapes.M3EContainer.pill(
+                  width: 42,
+                  height: 42,
+                  color: cs.primary,
+                  child: Icon(Icons.workspace_premium_rounded, color: cs.onPrimary),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Text(
+                    'Créditos',
+                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                          fontWeight: FontWeight.w800,
+                        ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            Text(
+              'Autor: Cristian Carreño León',
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700),
+            ),
+            const SizedBox(height: 4),
+            Text('Profesor de Matemática y Computación', style: Theme.of(context).textTheme.bodyLarge),
+            const SizedBox(height: 8),
+            Text('Mag. Comunicación educativa, Nvas. Tecnologías', style: Theme.of(context).textTheme.bodyMedium),
+            const SizedBox(height: 4),
+            Text('Dipl. Data Science', style: Theme.of(context).textTheme.bodyMedium),
+            const SizedBox(height: 14),
+            FilledButton.icon(
+              onPressed: openGithub,
+              icon: const Icon(Icons.open_in_new_rounded),
+              label: const Text('https://github.com/icristian'),
+              style: FilledButton.styleFrom(
+                backgroundColor: cs.primary,
+                foregroundColor: cs.onPrimary,
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+              ),
+            ),
+          ],
+        ),
+      ),
+    )
+        .animate()
+        .fadeIn(duration: 520.ms, curve: Curves.easeOutCubic)
+        .slideY(begin: 0.08, end: 0, duration: 620.ms, curve: Curves.easeOutCubic);
   }
 }
 
