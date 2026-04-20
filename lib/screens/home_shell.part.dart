@@ -231,6 +231,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final compactLayout = MediaQuery.sizeOf(context).width < 780;
+    final l10n = AppLocalizations.of(context);
     final navItems = _buildNavItems(l10n);
 
     return Scaffold(

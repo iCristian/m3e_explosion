@@ -71,6 +71,35 @@ class AppLocalizations {
       'showcase_github_title': 'Open Source Project',
       'showcase_github_desc': 'Download the complete source code, create your own version or contribute to the project.',
       'showcase_github_btn': 'View on GitHub',
+      // Utility modules
+      'module_routines': 'Routines',
+      'module_routines_desc': 'Habits, streaks and daily goals',
+      'module_focus': 'Focus',
+      'module_focus_desc': 'Distractions block and deep work sessions',
+      'module_finance': 'Finance',
+      'module_finance_desc': 'Spending tracking and budget alerts',
+      'module_health': 'Health',
+      'module_health_desc': 'Hydration, sleep and movement',
+      'module_agenda': 'Agenda',
+      'module_agenda_desc': 'Events, reminders and priorities',
+      'module_automation': 'Automation',
+      'module_automation_desc': 'Smart rules based on context',
+      // Tasks in showcase
+      'task_energy_metrics': 'Review energy metrics',
+      'task_sprint_report': 'Send sprint report',
+      'task_focus_session': 'Focus session 45 min',
+      'task_budget_update': 'Update budget',
+      // Refresh screen
+      'refresh_lab_title': 'Refresh Lab',
+      'refresh_no_items': 'No items yet',
+      'refresh_instruction': 'Pull-to-refresh or use buttons to force reload and see the behavior live.',
+      'refresh_force_btn': 'Force refresh',
+      'refresh_refreshing': 'Refreshing...',
+      'refresh_insert_instruction': 'Pull-to-refresh to insert more items',
+      // Finance module
+      'finance_monthly_budget': 'Monthly budget',
+      'finance_budget_alert': 'Budget alert',
+      'finance_alert_notify': 'Notify when exceeding 80% of monthly limit',
       // Video player
       'tap_to_load': 'Tap to load · Vimeo',
       'play_vimeo': '▶  Play Vimeo',
@@ -131,6 +160,35 @@ class AppLocalizations {
       'showcase_github_title': 'Proyecto Open Source',
       'showcase_github_desc': 'Descarga el codigo fuente completo, crea tu propia version o contribuye al proyecto.',
       'showcase_github_btn': 'Ver en GitHub',
+      // Utility modules
+      'module_routines': 'Rutinas',
+      'module_routines_desc': 'Hábitos, streaks y objetivos diarios',
+      'module_focus': 'Focus',
+      'module_focus_desc': 'Bloqueo de distracciones y bloques deep work',
+      'module_finance': 'Finanzas',
+      'module_finance_desc': 'Seguimiento de gasto y alertas de presupuesto',
+      'module_health': 'Salud',
+      'module_health_desc': 'Hidratación, sueño y movimiento',
+      'module_agenda': 'Agenda',
+      'module_agenda_desc': 'Eventos, recordatorios y prioridades',
+      'module_automation': 'Automatización',
+      'module_automation_desc': 'Reglas inteligentes según contexto',
+      // Tasks in showcase
+      'task_energy_metrics': 'Revisar métricas de energía',
+      'task_sprint_report': 'Enviar reporte del sprint',
+      'task_focus_session': 'Sesión de focus 45 min',
+      'task_budget_update': 'Actualizar presupuesto',
+      // Refresh screen
+      'refresh_lab_title': 'Laboratorio de Refresh',
+      'refresh_no_items': 'Sin refrescos aún',
+      'refresh_instruction': 'Haz pull-to-refresh o usa los botones para forzar recarga y ver el comportamiento en vivo.',
+      'refresh_force_btn': 'Forzar refresh',
+      'refresh_refreshing': 'Refrescando...',
+      'refresh_insert_instruction': 'Haz pull-to-refresh para insertar más elementos',
+      // Finance module
+      'finance_monthly_budget': 'Presupuesto mensual',
+      'finance_budget_alert': 'Alerta de presupuesto',
+      'finance_alert_notify': 'Notifica al superar 80% del límite mensual',
       // Video player
       'tap_to_load': 'Toca para cargar · Vimeo',
       'play_vimeo': '▶  Reproducir Vimeo',
@@ -191,6 +249,35 @@ class AppLocalizations {
       'showcase_github_title': 'Open-Source-Projekt',
       'showcase_github_desc': 'Laden Sie den vollständigen Quellcode herunter, erstellen Sie Ihre eigene Version oder tragen Sie zum Projekt bei.',
       'showcase_github_btn': 'Auf GitHub ansehen',
+      // Utility modules
+      'module_routines': 'Routinen',
+      'module_routines_desc': 'Gewohnheiten, Streaks und tägliche Ziele',
+      'module_focus': 'Fokus',
+      'module_focus_desc': 'Ablenkungssperre und Deep-Work-Blöcke',
+      'module_finance': 'Finanzen',
+      'module_finance_desc': 'Ausgabenverfolgung und Budgetwarnungen',
+      'module_health': 'Gesundheit',
+      'module_health_desc': 'Flüssigkeitszufuhr, Schlaf und Bewegung',
+      'module_agenda': 'Agenda',
+      'module_agenda_desc': 'Ereignisse, Erinnerungen und Prioritäten',
+      'module_automation': 'Automatisierung',
+      'module_automation_desc': 'Intelligente Regeln basierend auf Kontext',
+      // Tasks in showcase
+      'task_energy_metrics': 'Energiemetrics überprüfen',
+      'task_sprint_report': 'Sprint-Bericht senden',
+      'task_focus_session': 'Fokussitzung 45 Min',
+      'task_budget_update': 'Budget aktualisieren',
+      // Refresh screen
+      'refresh_lab_title': 'Aktualisierungs-Labor',
+      'refresh_no_items': 'Keine Elemente vorhanden',
+      'refresh_instruction': 'Ziehen Sie zum Aktualisieren oder verwenden Sie die Schaltflächen, um die Neuladen zu erzwingen und das Verhalten live zu sehen.',
+      'refresh_force_btn': 'Aktualisierung erzwingen',
+      'refresh_refreshing': 'Wird aktualisiert...',
+      'refresh_insert_instruction': 'Zum Aktualisieren ziehen, um mehr Elemente einzufügen',
+      // Finance module
+      'finance_monthly_budget': 'Monatliches Budget',
+      'finance_budget_alert': 'Budgetwarnung',
+      'finance_alert_notify': 'Benachrichtige, wenn Limit von 80% überschritten wird',
       // Video player
       'tap_to_load': 'Tippen zum Laden · Vimeo',
       'play_vimeo': '▶  Vimeo abspielen',
@@ -251,6 +338,35 @@ class AppLocalizations {
       'showcase_github_title': '开源项目',
       'showcase_github_desc': '下载完整源代码，创建您自己的版本或为项目做贡献。',
       'showcase_github_btn': '在 GitHub 上查看',
+      // Utility modules
+      'module_routines': '日常安排',
+      'module_routines_desc': '习惯、连续记录和每日目标',
+      'module_focus': '专注',
+      'module_focus_desc': '分心拦截和深度工作块',
+      'module_finance': '财务',
+      'module_finance_desc': '支出跟踪和预算提醒',
+      'module_health': '健康',
+      'module_health_desc': '水分摄入、睡眠和运动',
+      'module_agenda': '日程',
+      'module_agenda_desc': '事件、提醒和优先级',
+      'module_automation': '自动化',
+      'module_automation_desc': '基于上下文的智能规则',
+      // Tasks in showcase
+      'task_energy_metrics': '查看能量指标',
+      'task_sprint_report': '发送冲刺报告',
+      'task_focus_session': '专注会话 45 分钟',
+      'task_budget_update': '更新预算',
+      // Refresh screen
+      'refresh_lab_title': '刷新实验室',
+      'refresh_no_items': '暂无项目',
+      'refresh_instruction': '下拉刷新或使用按钮强制重新加载并查看实时行为。',
+      'refresh_force_btn': '强制刷新',
+      'refresh_refreshing': '刷新中...',
+      'refresh_insert_instruction': '下拉刷新以插入更多项目',
+      // Finance module
+      'finance_monthly_budget': '月度预算',
+      'finance_budget_alert': '预算提醒',
+      'finance_alert_notify': '超过每月限额的 80% 时通知',
       // Video player
       'tap_to_load': '点击加载 · Vimeo',
       'play_vimeo': '▶  播放 Vimeo',
@@ -317,6 +433,35 @@ class AppLocalizations {
   String get showcaseGithubTitle => _t('showcase_github_title');
   String get showcaseGithubDesc => _t('showcase_github_desc');
   String get showcaseGithubBtn => _t('showcase_github_btn');
+  // Modules
+  String get moduleRoutines => _t('module_routines');
+  String get moduleRoutinesDesc => _t('module_routines_desc');
+  String get moduleFocus => _t('module_focus');
+  String get moduleFocusDesc => _t('module_focus_desc');
+  String get moduleFinance => _t('module_finance');
+  String get moduleFinanceDesc => _t('module_finance_desc');
+  String get moduleHealth => _t('module_health');
+  String get moduleHealthDesc => _t('module_health_desc');
+  String get moduleAgenda => _t('module_agenda');
+  String get moduleAgendaDesc => _t('module_agenda_desc');
+  String get moduleAutomation => _t('module_automation');
+  String get moduleAutomationDesc => _t('module_automation_desc');
+  // Tasks
+  String get taskEnergyMetrics => _t('task_energy_metrics');
+  String get taskSprintReport => _t('task_sprint_report');
+  String get taskFocusSession => _t('task_focus_session');
+  String get taskBudgetUpdate => _t('task_budget_update');
+  // Refresh
+  String get refreshLabTitle => _t('refresh_lab_title');
+  String get refreshNoItems => _t('refresh_no_items');
+  String get refreshInstruction => _t('refresh_instruction');
+  String get refreshForceBtn => _t('refresh_force_btn');
+  String get refreshRefreshing => _t('refresh_refreshing');
+  String get refreshInsertInstruction => _t('refresh_insert_instruction');
+  // Finance
+  String get financeMonthlyBudget => _t('finance_monthly_budget');
+  String get financeBudgetAlert => _t('finance_budget_alert');
+  String get financeAlertNotify => _t('finance_alert_notify');
   // Video
   String get tapToLoad => _t('tap_to_load');
   String get playVimeo => _t('play_vimeo');
