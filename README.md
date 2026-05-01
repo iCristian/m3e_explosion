@@ -259,6 +259,86 @@ flutter run
 - Probar boton de abrir externo (fallback Vimeo).
 - Validar restricciones del dispositivo/navegador.
 
+## 🔒 Política de Privacidad / Privacy Policy
+
+**Última actualización / Last updated:** 1 de mayo de 2026 / May 1, 2026
+
+### Español
+
+**M3E Explosion** es una aplicación de demostración de código abierto desarrollada por Cristian Carreño León ("el desarrollador"). Esta política describe cómo la aplicación maneja la información del usuario.
+
+#### Recopilación de datos
+
+Esta aplicación **no recopila, almacena ni transmite datos personales** de ningún tipo. En particular:
+
+- **No se requiere registro** ni creación de cuenta.
+- **No se recopilan datos de ubicación**, contactos, cámara, micrófono ni archivos del dispositivo.
+- **No se utilizan servicios de analítica** (Google Analytics, Firebase Analytics, ni similares).
+- **No se muestran anuncios** ni se integran redes publicitarias.
+- **No se comparten datos con terceros.**
+
+#### Almacenamiento local
+
+La aplicación utiliza `shared_preferences` para guardar preferencias de interfaz (como el tema de color y el idioma seleccionado) **exclusivamente en el dispositivo del usuario**. Estos datos nunca se transmiten a servidores externos.
+
+#### Contenido de terceros
+
+La aplicación puede reproducir videos educativos embebidos desde **Vimeo** mediante WebView. Al reproducir un video, se aplican las políticas de privacidad de Vimeo ([vimeo.com/privacy](https://vimeo.com/privacy)). La aplicación no envía datos del usuario a Vimeo.
+
+#### Permisos
+
+La aplicación solo solicita acceso a **Internet** para cargar contenido de video. No solicita permisos sensibles del dispositivo.
+
+#### Cambios en esta política
+
+Si esta política se actualiza, los cambios se publicarán en este mismo archivo del repositorio público.
+
+#### Contacto
+
+Para consultas sobre privacidad:
+- **Email:** icristian.mac@gmail.com
+- **GitHub:** [github.com/iCristian/m3e_explosion](https://github.com/iCristian/m3e_explosion)
+
+---
+
+### English
+
+**M3E Explosion** is an open-source demo application developed by Cristian Carreño León ("the developer"). This policy describes how the application handles user information.
+
+#### Data Collection
+
+This application **does not collect, store, or transmit any personal data**. Specifically:
+
+- **No registration** or account creation is required.
+- **No location data**, contacts, camera, microphone, or device files are accessed.
+- **No analytics services** (Google Analytics, Firebase Analytics, or similar) are used.
+- **No advertisements** are displayed and no ad networks are integrated.
+- **No data is shared with third parties.**
+
+#### Local Storage
+
+The application uses `shared_preferences` to save interface preferences (such as color theme and selected language) **exclusively on the user's device**. This data is never transmitted to external servers.
+
+#### Third-Party Content
+
+The application may play embedded educational videos from **Vimeo** via WebView. When playing a video, Vimeo's privacy policies apply ([vimeo.com/privacy](https://vimeo.com/privacy)). The application does not send user data to Vimeo.
+
+#### Permissions
+
+The application only requests **Internet** access to load video content. It does not request sensitive device permissions.
+
+#### Changes to This Policy
+
+If this policy is updated, changes will be published in this file within the public repository.
+
+#### Contact
+
+For privacy inquiries:
+- **Email:** icristian.mac@gmail.com
+- **GitHub:** [github.com/iCristian/m3e_explosion](https://github.com/iCristian/m3e_explosion)
+
+---
+
 ## 📜 Licencia
 
 Este proyecto está licenciado bajo la **Licencia MIT**.
